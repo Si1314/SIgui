@@ -53,24 +53,7 @@ public class GUI {
 
 	}
 	
-	public void initialize(){
-		try
-	    {
-	      UIManager.setLookAndFeel(new SyntheticaClassyLookAndFeel());
-	    }
-	    catch (Exception e)
-	    {
-	      e.printStackTrace();
-	    }
-		
-		frmGrupo = new JFrame();
-		frmGrupo.setLocationRelativeTo(null);
-		frmGrupo.setTitle("Ejecucion simbolica");
-		frmGrupo.setBounds(100, 100, 900, 500);
-		frmGrupo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmGrupo.getContentPane().setLayout(new MigLayout("", "[180.00,grow][680.00,grow][327.00,grow][]", "[64.00,grow][210.00,grow][210.00,grow][grow 600]"));
-		
-		//Menu Bar
+	public JMenuBar getMenuBar(){
 		JMenuBar menubar = new JMenuBar();
 		JMenu file = new JMenu("File");
 		JMenuItem menuItem11 = new JMenuItem("New");
@@ -107,43 +90,69 @@ public class GUI {
 		edit.add(menuItem26);
 		edit.add(menuItem27);
 		menubar.add(edit);
-		frmGrupo.setJMenuBar(menubar);
 		
-		//Tool Bar Menu
-		
+		return menubar;
+	}
+	
+	public JToolBar getToolBar(){
 		JToolBar toolBar = new JToolBar();
-		ImageIcon icon1 = new ImageIcon("./img/Open-File-24.png");
-		ImageIcon icon2 = new ImageIcon("./img/Cut-24.png");
-		ImageIcon icon3 = new ImageIcon("./img/Copy-24.png");
-		ImageIcon icon4 = new ImageIcon("./img/Paste-24.png");
-		ImageIcon icon5 = new ImageIcon("./img/Play1Pressed_24.png");
-		ImageIcon icon6 = new ImageIcon("./img/Printer-blue-24.png");
-		ImageIcon icon7 = new ImageIcon("./img/Save-24.png");
-		ImageIcon icon8 = new ImageIcon("./img/Undo-24.png");
-		ImageIcon icon9 = new ImageIcon("./img/Redo-24.png");
+		ImageIcon icon_open = new ImageIcon("./img/Open-File-24.png");
+		ImageIcon icon_cut = new ImageIcon("./img/Cut-24.png");
+		ImageIcon icon_copy = new ImageIcon("./img/Copy-24.png");
+		ImageIcon icon_paste = new ImageIcon("./img/Paste-24.png");
+		ImageIcon icon_play = new ImageIcon("./img/Play1Pressed_24.png");
+		ImageIcon icon_print = new ImageIcon("./img/Printer-blue-24.png");
+		ImageIcon icon_save = new ImageIcon("./img/Save-24.png");
+		ImageIcon icon_undo = new ImageIcon("./img/Undo-24.png");
+		ImageIcon icon_redo = new ImageIcon("./img/Redo-24.png");
 
-        JButton but1 = new JButton(icon1);
-        JButton but2 = new JButton(icon2);
-        JButton but3 = new JButton(icon3);
-        JButton but4 = new JButton(icon4);
-        JButton but5 = new JButton(icon5);
-        JButton but6 = new JButton(icon6);
-        JButton but7 = new JButton(icon7);
-        JButton but8 = new JButton(icon8);
-        JButton but9 = new JButton(icon9);
+        JButton but_open = new JButton(icon_open);
+        JButton but_cut = new JButton(icon_cut);
+        JButton but_copy = new JButton(icon_copy);
+        JButton but_paste = new JButton(icon_paste);
+        JButton but_play = new JButton(icon_play);
+        JButton but_print = new JButton(icon_print);
+        JButton but_save = new JButton(icon_save);
+        JButton but_undo = new JButton(icon_undo);
+        JButton but_redo = new JButton(icon_redo);
         
-        toolBar.add(but1);
-        toolBar.add(but2);
-        toolBar.add(but3);
-        toolBar.add(but4);
-        toolBar.add(but5);
-        toolBar.add(but6);
-        toolBar.add(but7);
-        toolBar.add(but8);
-        toolBar.add(but9);
+        toolBar.add(but_open);
+        toolBar.add(but_save);
+        toolBar.add(but_print);
+        toolBar.addSeparator();
+        toolBar.add(but_cut);
+        toolBar.add(but_copy);
+        toolBar.add(but_paste);
+        toolBar.addSeparator();
+        toolBar.add(but_undo);
+        toolBar.add(but_redo);
+        toolBar.addSeparator();
+        toolBar.add(but_play);
         
+        return toolBar;
+
+	}
+	
+	public void initialize(){
+		try
+	    {
+	      UIManager.setLookAndFeel(new SyntheticaClassyLookAndFeel());
+	    }
+	    catch (Exception e)
+	    {
+	      e.printStackTrace();
+	    }
+		
+		frmGrupo = new JFrame();
+		frmGrupo.setLocationRelativeTo(null);
+		frmGrupo.setTitle("Ejecucion simbolica");
+		frmGrupo.setBounds(100, 100, 900, 500);
+		frmGrupo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmGrupo.getContentPane().setLayout(new MigLayout("", "[180.00,grow][680.00,grow][327.00,grow][]", "[64.00,grow][210.00,grow][64.00,grow][210.00,grow][grow 600]"));
+		
+		frmGrupo.setJMenuBar(getMenuBar());        
         
-        frmGrupo.add(toolBar,BorderLayout.NORTH);
+        frmGrupo.add(getToolBar(),BorderLayout.NORTH);
 		
 		
 		//Text Area for function
@@ -164,8 +173,20 @@ public class GUI {
 		JTextArea_function.setEditable(true);
 		JScrollPane_function.setViewportView(JTextArea_function);
 		
+		// Boton play
+		
+		JPanel JPanel_play = new JPanel();
+		frmGrupo.getContentPane().add(JPanel_play, "cell 1 2,grow");
+		JPanel_play.setLayout(new MigLayout("","[right]","[grow]"));
+		
+		JButton JButton_play = new JButton("Play",new ImageIcon("./img/Play1Pressed_24.png"));
+		JPanel_play.add(JButton_play, "align right");
+		
+		
+		// Zona resultado
+		
 		JPanel JPanel_result = new JPanel();
-		frmGrupo.getContentPane().add(JPanel_result, "cell 1 2,grow");
+		frmGrupo.getContentPane().add(JPanel_result, "cell 1 3,grow");
 		JPanel_result.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
 		JLabel JLabel_result = new JLabel("Salidas de la funci\u00F3n:");
