@@ -3,9 +3,15 @@ package interfaz;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
+import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -17,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.text.DefaultEditorKit;
 
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
@@ -107,12 +114,27 @@ public class GUI {
 		ImageIcon icon_redo = new ImageIcon("./img/Redo-24.png");
 
         JButton but_open = new JButton(icon_open);
-        JButton but_cut = new JButton(icon_cut);
-        JButton but_copy = new JButton(icon_copy);
-        JButton but_paste = new JButton(icon_paste);
+        	but_open.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					// Abrir jFileChooser
+					// print archivo cppn en jTextArea
+					openFile();
+					
+				}
+			});
+        JButton but_cut = new JButton(new DefaultEditorKit.CutAction());
+	        but_cut.setIcon(icon_cut);
+	        but_cut.setText("");
+        JButton but_copy = new JButton(new DefaultEditorKit.CopyAction());
+	        but_copy.setIcon(icon_copy);
+	        but_copy.setText("");
+        JButton but_paste = new JButton(new DefaultEditorKit.PasteAction());
+	        but_paste.setIcon(icon_paste);
+	        but_paste.setText("");
         JButton but_play = new JButton(icon_play);
         JButton but_print = new JButton(icon_print);
-        JButton but_save = new JButton(icon_save);
+        JButton but_save = new JButton(icon_save);	
         JButton but_undo = new JButton(icon_undo);
         JButton but_redo = new JButton(icon_redo);
         
@@ -202,6 +224,14 @@ public class GUI {
 		JScrollPane_result.setViewportView(JTextArea_result);
 		
 		
+	}
+	
+	public void openFile(){
+		JFileChooser chooser=new  JFileChooser();
+        int returnVal = chooser.showOpenDialog(null);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+        	
+        }
 	}
 	
 	public void runGUI() {
