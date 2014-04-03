@@ -7,6 +7,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -17,12 +21,14 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultEditorKit;
 
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
@@ -35,6 +41,7 @@ public class GUI {
 	private JFrame frmGrupo;
 	private JTextArea JTextArea_function;
 	private JTextArea JTextArea_result;
+	private String fich;
 	
 
 	
@@ -63,39 +70,55 @@ public class GUI {
 	public JMenuBar getMenuBar(){
 		JMenuBar menubar = new JMenuBar();
 		JMenu file = new JMenu("File");
-		JMenuItem menuItem11 = new JMenuItem("New");
-		JMenuItem menuItem12 = new JMenuItem("Open File");
-		JMenuItem menuItem13 = new JMenuItem("Save");
-		JMenuItem menuItem14 = new JMenuItem("Close");
-		JMenuItem menuItem15 = new JMenuItem("Close all");
-		JMenuItem menuItem16 = new JMenuItem("Exit");
-		file.add(menuItem11);
-		file.add(menuItem12);
+		JMenuItem menu_new = new JMenuItem("New");
+			menu_new.setEnabled(false);
+		JMenuItem menu_open = new JMenuItem("Open File");
+			menu_open.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					openFile();
+				}
+			});
+		JMenuItem menu_save = new JMenuItem("Save");
+			menu_save.setEnabled(false);
+		JMenuItem menu_close = new JMenuItem("Close");
+			menu_close.setEnabled(false);
+		JMenuItem menu_closeall = new JMenuItem("Close all");
+			menu_closeall.setEnabled(false);
+		JMenuItem menu_exit = new JMenuItem("Exit");
+		file.add(menu_new);
+		file.add(menu_open);
 		file.addSeparator();
-		file.add(menuItem13);
+		file.add(menu_save);
 		file.addSeparator();
-		file.add(menuItem14);
-		file.add(menuItem15);
+		file.add(menu_close);
+		file.add(menu_closeall);
 		file.addSeparator();
-		file.add(menuItem16);
+		file.add(menu_exit);
 		menubar.add(file);
 		JMenu edit = new JMenu("Edit");
-		JMenuItem menuItem21 = new JMenuItem("Undo");
-		JMenuItem menuItem22 = new JMenuItem("Redo");
-		JMenuItem menuItem23 = new JMenuItem("Cut");
-		JMenuItem menuItem24 = new JMenuItem("Copy");
-		JMenuItem menuItem25 = new JMenuItem("Paste");
-		JMenuItem menuItem26 = new JMenuItem("Delete");
-		JMenuItem menuItem27 = new JMenuItem("Select all");
-		edit.add(menuItem21);
-		edit.add(menuItem22);
+		JMenuItem menu_undo = new JMenuItem("Undo");
+			menu_undo.setEnabled(false);
+		JMenuItem menu_redo = new JMenuItem("Redo");
+			menu_redo.setEnabled(false);
+		JMenuItem menu_cut = new JMenuItem(new DefaultEditorKit.CutAction());
+			menu_cut.setText("Cut");
+		JMenuItem menu_copy = new JMenuItem(new DefaultEditorKit.CopyAction());
+			menu_copy.setText("Copy");
+		JMenuItem menu_paste = new JMenuItem(new DefaultEditorKit.PasteAction());
+			menu_paste.setText("Paste");
+		JMenuItem menu_delete = new JMenuItem("Delete");
+			menu_delete.setEnabled(false);
+		JMenuItem menu_selectall = new JMenuItem("Select all");
+			menu_selectall.setEnabled(false);
+		edit.add(menu_undo);
+		edit.add(menu_redo);
 		edit.addSeparator();
-		edit.add(menuItem23);
-		edit.add(menuItem24);
-		edit.add(menuItem25);
+		edit.add(menu_cut);
+		edit.add(menu_copy);
+		edit.add(menu_paste);
 		edit.addSeparator();
-		edit.add(menuItem26);
-		edit.add(menuItem27);
+		edit.add(menu_delete);
+		edit.add(menu_selectall);
 		menubar.add(edit);
 		
 		return menubar;
@@ -116,11 +139,7 @@ public class GUI {
         JButton but_open = new JButton(icon_open);
         	but_open.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
-					// Abrir jFileChooser
-					// print archivo cppn en jTextArea
 					openFile();
-					
 				}
 			});
         JButton but_cut = new JButton(new DefaultEditorKit.CutAction());
@@ -134,9 +153,13 @@ public class GUI {
 	        but_paste.setText("");
         JButton but_play = new JButton(icon_play);
         JButton but_print = new JButton(icon_print);
-        JButton but_save = new JButton(icon_save);	
+        but_print.setEnabled(false);
+        JButton but_save = new JButton(icon_save);
+        but_save.setEnabled(false);
         JButton but_undo = new JButton(icon_undo);
+        but_undo.setEnabled(false);
         JButton but_redo = new JButton(icon_redo);
+        but_redo.setEnabled(false);
         
         toolBar.add(but_open);
         toolBar.add(but_save);
@@ -227,12 +250,54 @@ public class GUI {
 	}
 	
 	public void openFile(){
-		JFileChooser chooser=new  JFileChooser();
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-        	
-        }
+		boolean cerradoDialog = false;
+		try {
+		  	JFileChooser selecFich = new JFileChooser();
+		  	selecFich.setDialogTitle("Elegir un fichero fuente");
+		  	try {
+		  		FileNameExtensionFilter filtro=new FileNameExtensionFilter("C++ file","cpp","cc");
+			  	selecFich.setFileFilter(filtro);
+			  	//System.out.print(filtro.toString());
+			  	
+			  	cerradoDialog = selecFich.showOpenDialog(frmGrupo)== JFileChooser.CANCEL_OPTION;
+							    	
+			  	if (!cerradoDialog){
+			  		fich = selecFich.getSelectedFile().getPath();
+			    //System.out.print(fich.toString());
+			  	}
+			    	
+		  	} catch (IllegalArgumentException e2){
+		  		 JOptionPane.showMessageDialog (frmGrupo, "La extensión del archivo es incorrecta."); 
+		  	}	  	
+		    
+		} catch (Exception e1) {
+	    	 JOptionPane.showMessageDialog (frmGrupo, "No has seleccionado ningun fichero"); 
+	    }
+		
+		if (!cerradoDialog){
+			printFile();
+		}
 	}
+	
+	private void printFile (){
+        try {  
+        	JTextArea_function.setText("");
+        	FileReader lector = new FileReader(fich);
+            BufferedReader buffer = new BufferedReader(lector);
+            String linea = "";
+            int numLinea = 1;
+            
+            while((linea = buffer.readLine()) != null){
+            	JTextArea_function.append(numLinea + ": " + linea + "\n");
+            	numLinea ++;
+            }
+            buffer.close();
+            lector.close();
+        }
+        catch(Exception e){     
+        	e.printStackTrace();
+        }
+}
 	
 	public void runGUI() {
 		// LookAndFeel + posición inicial
