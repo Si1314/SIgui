@@ -93,6 +93,11 @@ public class GUI {
 		JMenuItem menu_closeall = new JMenuItem("Close all");
 			menu_closeall.setEnabled(false);
 		JMenuItem menu_exit = new JMenuItem("Exit");
+			menu_exit.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					System.exit(0); 
+				}
+			});
 		file.add(menu_new);
 		file.add(menu_open);
 		file.addSeparator();
