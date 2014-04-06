@@ -27,8 +27,12 @@ import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultEditorKit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.UndoManager;
 
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
@@ -42,7 +46,9 @@ public class GUI {
 	private JTextArea JTextArea_result;
 	private String file = "function";
 	private File path;
-	
+	private UndoManager undoManager = new UndoManager();
+	JButton but_redo, but_undo;
+	JMenuItem menu_redo, menu_undo;
 
 	
 	private GUI() {
@@ -96,10 +102,32 @@ public class GUI {
 		file.add(menu_exit);
 		menubar.add(file);
 		JMenu edit = new JMenu("Edit");
-		JMenuItem menu_undo = new JMenuItem("Undo");
+		menu_undo = new JMenuItem("Undo");
 			menu_undo.setEnabled(false);
-		JMenuItem menu_redo = new JMenuItem("Redo");
+			menu_undo.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						undoManager.undo();
+				    } 
+					catch (CannotRedoException cre) {
+				          cre.printStackTrace();
+				    }
+					updateUndoRedo();
+				}
+			});
+		menu_redo = new JMenuItem("Redo");
 			menu_redo.setEnabled(false);
+			menu_redo.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						undoManager.redo();
+				    } 
+					catch (CannotRedoException cre) {
+				          cre.printStackTrace();
+				    }
+					updateUndoRedo();
+				}
+			});
 		JMenuItem menu_cut = new JMenuItem(new DefaultEditorKit.CutAction());
 			menu_cut.setText("Cut");
 		JMenuItem menu_copy = new JMenuItem(new DefaultEditorKit.CopyAction());
@@ -161,10 +189,32 @@ public class GUI {
         but_print.setEnabled(false);
         JButton but_save = new JButton(icon_save);
         but_save.setEnabled(false);
-        JButton but_undo = new JButton(icon_undo);
-        but_undo.setEnabled(false);
-        JButton but_redo = new JButton(icon_redo);
-        but_redo.setEnabled(false);
+        but_undo = new JButton(icon_undo);
+        	but_undo.setEnabled(false);
+        	but_undo.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						undoManager.undo();
+				    } 
+					catch (CannotRedoException cre) {
+				          cre.printStackTrace();
+				    }
+					updateUndoRedo();
+				}
+			});
+        but_redo = new JButton(icon_redo);
+        	but_redo.setEnabled(false);
+	        but_redo.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						undoManager.redo();
+				    } 
+					catch (CannotRedoException cre) {
+				          cre.printStackTrace();
+				    }
+					updateUndoRedo();
+				}
+			});
         
         toolBar.add(but_open);
         toolBar.add(but_save);
@@ -221,6 +271,13 @@ public class GUI {
 		
 		JTextArea_function = new JTextArea();
 		JTextArea_function.setEditable(true);
+			JTextArea_function.getDocument().addUndoableEditListener(
+		        new UndoableEditListener() {
+		          public void undoableEditHappened(UndoableEditEvent e) {
+		            undoManager.addEdit(e.getEdit());
+		            updateUndoRedo();
+		          }
+		    });
 		JScrollPane_function.setViewportView(JTextArea_function);
 		
 		// Boton play
@@ -230,6 +287,11 @@ public class GUI {
 		JPanel_play.setLayout(new MigLayout("","[right]","[grow]"));
 		
 		JButton JButton_play = new JButton("Play",new ImageIcon("./img/Play1Pressed_24.png"));
+			JButton_play.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					executeSE();
+				}
+			});
 		JPanel_play.add(JButton_play, "align right");
 		
 		
@@ -251,7 +313,13 @@ public class GUI {
 		JTextArea_result.setEditable(false);
 		JScrollPane_result.setViewportView(JTextArea_result);
 		
-		
+	}
+	
+	public void updateUndoRedo(){
+		but_undo.setEnabled(undoManager.canUndo());
+		menu_undo.setEnabled(undoManager.canUndo());
+		but_redo.setEnabled(undoManager.canRedo());
+		menu_redo.setEnabled(undoManager.canRedo());
 	}
 	
 	public void openFile(){
