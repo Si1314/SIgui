@@ -38,6 +38,15 @@ import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
 import net.miginfocom.swing.MigLayout;
 
+import gnu.prolog.term.AtomTerm;
+import gnu.prolog.term.CompoundTerm;
+import gnu.prolog.term.Term;
+import gnu.prolog.term.VariableTerm;
+import gnu.prolog.vm.Environment;
+import gnu.prolog.vm.Interpreter;
+import gnu.prolog.vm.PrologCode;
+import gnu.prolog.vm.PrologException;
+
 
 public class GUI {
 
@@ -49,6 +58,10 @@ public class GUI {
 	private UndoManager undoManager = new UndoManager();
 	JButton but_redo, but_undo;
 	JMenuItem menu_redo, menu_undo;
+	
+	//Variables to Prolog environment
+	private static Environment env;
+	private static Interpreter interpreter;
 
 	
 	private GUI() {
@@ -445,9 +458,9 @@ public class GUI {
 	
 	public void executeSE(){
 		saveTextEditor(JTextArea_function);
+		//TODO
 		//execute Clang with files(nameFile.cc)
 		//execute Prolog with (nameFileXML.xml)
-		//show Prolog (nameFilePL.xml)
 		showSolution(JTextArea_result);
 		
 	}

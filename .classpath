@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="C:/Users/Raquel/Documents/facultad/SI/SIgui/libs/synthetica.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Raquel/Documents/facultad/SI/SIgui/libs/syntheticaClassy.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Raquel/Documents/facultad/SI/SIgui/libs/syntheticaAluOxide.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Raquel/Documents/facultad/SI/SIgui/libs/gnuprologjava-0.2.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
