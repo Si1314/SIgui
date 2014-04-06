@@ -5,14 +5,12 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
-import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -41,7 +39,8 @@ public class GUI {
 	private JFrame frmGrupo;
 	private JTextArea JTextArea_function;
 	private JTextArea JTextArea_result;
-	private String fich;
+	private String file = "function";
+	private File path;
 	
 
 	
@@ -152,6 +151,11 @@ public class GUI {
 	        but_paste.setIcon(icon_paste);
 	        but_paste.setText("");
         JButton but_play = new JButton(icon_play);
+	        but_play.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					executeSE();
+				}
+			});
         JButton but_print = new JButton(icon_print);
         but_print.setEnabled(false);
         JButton but_save = new JButton(icon_save);
@@ -262,8 +266,10 @@ public class GUI {
 			  	cerradoDialog = selecFich.showOpenDialog(frmGrupo)== JFileChooser.CANCEL_OPTION;
 							    	
 			  	if (!cerradoDialog){
-			  		fich = selecFich.getSelectedFile().getPath();
-			    //System.out.print(fich.toString());
+			  		path = selecFich.getSelectedFile();
+			  		file = path.getName();
+			  		file = file.substring(0, file.lastIndexOf("."));
+			  		System.out.println(file.toString());
 			  	}
 			    	
 		  	} catch (IllegalArgumentException e2){
@@ -275,21 +281,19 @@ public class GUI {
 	    }
 		
 		if (!cerradoDialog){
-			printFile();
+			printFile(JTextArea_function);
 		}
 	}
 	
-	private void printFile (){
+	public void printFile (JTextArea jtextarea){
         try {  
-        	JTextArea_function.setText("");
-        	FileReader lector = new FileReader(fich);
+        	jtextarea.setText("");
+        	FileReader lector = new FileReader(path);
             BufferedReader buffer = new BufferedReader(lector);
             String linea = "";
-            int numLinea = 1;
             
             while((linea = buffer.readLine()) != null){
-            	JTextArea_function.append(numLinea + ": " + linea + "\n");
-            	numLinea ++;
+            	jtextarea.append(linea + "\n");
             }
             buffer.close();
             lector.close();
@@ -297,7 +301,32 @@ public class GUI {
         catch(Exception e){     
         	e.printStackTrace();
         }
-}
+	}
+	
+	public void saveTextEditor(JTextArea jtextarea){
+		//String fileName = JOptionPane.showInputDialog("Enter file name");//String finalFileName = fileName.getText();
+        FileWriter pw;
+		try {
+			File folder = new File("./files");
+			if (!folder.exists()) {
+				folder.mkdir();
+			}
+			pw = new FileWriter ("./files/"+file+".cc");
+			JTextArea_function.write(pw); //Object of JTextArea
+	        pw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+	}
+	
+	public void executeSE(){
+		saveTextEditor(JTextArea_function);
+		//execute Clang with files(nameFile.cc)
+		//execute Prolog with (nameFileXML.xml)
+		//show Prolog (nameFilePL.xml)
+		
+	}
 	
 	public void runGUI() {
 		// LookAndFeel + posición inicial
