@@ -79,6 +79,7 @@ public class GUI {
 		JMenuItem menu_new = new JMenuItem("New");
 			menu_new.setEnabled(false);
 		JMenuItem menu_open = new JMenuItem("Open File");
+			menu_open.setIcon(new ImageIcon("./img/Open-12.png"));
 			menu_open.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					openFile();
@@ -86,6 +87,7 @@ public class GUI {
 			});
 		JMenuItem menu_save = new JMenuItem("Save");
 			menu_save.setEnabled(false);
+			menu_save.setIcon(new ImageIcon("./img/Save-12.png"));
 		JMenuItem menu_close = new JMenuItem("Close");
 			menu_close.setEnabled(false);
 		JMenuItem menu_closeall = new JMenuItem("Close all");
@@ -104,6 +106,7 @@ public class GUI {
 		JMenu edit = new JMenu("Edit");
 		menu_undo = new JMenuItem("Undo");
 			menu_undo.setEnabled(false);
+			menu_undo.setIcon(new ImageIcon("./img/Undo-12.png"));
 			menu_undo.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
@@ -117,6 +120,7 @@ public class GUI {
 			});
 		menu_redo = new JMenuItem("Redo");
 			menu_redo.setEnabled(false);
+			menu_redo.setIcon(new ImageIcon("./img/Redo-12.png"));
 			menu_redo.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
@@ -129,10 +133,13 @@ public class GUI {
 				}
 			});
 		JMenuItem menu_cut = new JMenuItem(new DefaultEditorKit.CutAction());
+			menu_cut.setIcon(new ImageIcon("./img/Cut-12.png"));
 			menu_cut.setText("Cut");
 		JMenuItem menu_copy = new JMenuItem(new DefaultEditorKit.CopyAction());
+			menu_copy.setIcon(new ImageIcon("./img/Copy-12.png"));
 			menu_copy.setText("Copy");
 		JMenuItem menu_paste = new JMenuItem(new DefaultEditorKit.PasteAction());
+			menu_paste.setIcon(new ImageIcon("./img/Paste-12.png"));
 			menu_paste.setText("Paste");
 		JMenuItem menu_delete = new JMenuItem("Delete");
 			menu_delete.setEnabled(false);
