@@ -137,7 +137,12 @@ public class GUI {
 		JMenuItem menu_delete = new JMenuItem("Delete");
 			menu_delete.setEnabled(false);
 		JMenuItem menu_selectall = new JMenuItem("Select all");
-			menu_selectall.setEnabled(false);
+			//menu_selectall.setEnabled(false);
+			menu_selectall.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JTextArea_function.selectAll();
+				}
+			});
 		edit.add(menu_undo);
 		edit.add(menu_redo);
 		edit.addSeparator();
