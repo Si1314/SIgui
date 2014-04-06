@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -317,7 +318,44 @@ public class GUI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-        
+	}
+	
+	public void showSolution(JTextArea jtextarea){
+		try {  
+        	jtextarea.setText("");
+        	FileReader lector = new FileReader("./files/"+file+"PL.xml");
+            BufferedReader buffer = new BufferedReader(lector);
+            String line = "";
+            boolean first = true;
+            
+            while((line = buffer.readLine()) != null){
+            	if (line.equals("<table/>"))
+            		if(first)
+            			first = false;
+            		else
+            			jtextarea.append("\n");
+            	else{
+            		StringTokenizer aux = new StringTokenizer(line, " ");
+            		String word = "";
+            		while (aux.hasMoreTokens()){
+            			word = aux.nextToken();
+                		if (word.contains("name")){
+                			jtextarea.append(word.substring(word.indexOf("\"")+1, word.lastIndexOf("\"")));
+                			jtextarea.append(": ");
+                		}
+                		else if (word.contains("value")){
+                			jtextarea.append(word.substring(word.indexOf("\"")+1, word.lastIndexOf("\"")));
+                			jtextarea.append("\t");
+                		}
+            		}
+            	}
+            }
+            buffer.close();
+            lector.close();
+        }
+        catch(Exception e){     
+        	e.printStackTrace();
+        }
 	}
 	
 	public void executeSE(){
@@ -325,6 +363,7 @@ public class GUI {
 		//execute Clang with files(nameFile.cc)
 		//execute Prolog with (nameFileXML.xml)
 		//show Prolog (nameFilePL.xml)
+		showSolution(JTextArea_result);
 		
 	}
 	
