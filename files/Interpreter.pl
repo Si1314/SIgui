@@ -11,10 +11,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% First you have to keep this file in a folder called "PFC"
-% Then open swi Prolog and write "interpreter." to taste it
-
-% Carga el arbol dado por xml en 'Program'
 
 inf(-3).
 sup(3).
@@ -33,7 +29,7 @@ interpreter(EntryFile, OutFile):-
     close(Stream).
 
 interpreterAux(EntryFile,LabelTableNames, LabelTableValues):-
-	cd('../PFC'),
+	%cd('../PFC'),
 	load_xml_file(EntryFile, Program),
 
 	removeEmpty(Program,GoodProgram),
