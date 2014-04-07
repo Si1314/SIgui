@@ -1,0 +1,38 @@
+<function name="foo" type="int">
+    <param type="int" name="x"/>
+    <body>
+        <declarations>
+            <declaration type="int" name="w">
+                <variable name="x"/>
+            </declaration>
+        </declarations>
+        <declarations>
+            <declaration type="int" name="y">
+                <const value="1"/>
+            </declaration>
+        </declarations>
+        <while>
+            <binaryOperator type="comparison" operator="&gt;">
+                <variable name="w"/>
+                <const value="0"/>
+            </binaryOperator>
+            <body>
+                <assignment name="y">
+                    <binaryOperator type="arithmetic" operator="*">
+                        <variable name="y"/>
+                        <const value="2"/>
+                    </binaryOperator>
+                </assignment>
+                <assignment name="w">
+                    <binaryOperator type="arithmetic" operator="-">
+                        <variable name="w"/>
+                        <const value="1"/>
+                    </binaryOperator>
+                </assignment>
+            </body>
+        </while>
+        <return>
+            <variable name="y"/>
+        </return>
+    </body>
+</function>

@@ -38,15 +38,6 @@ import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
 import net.miginfocom.swing.MigLayout;
 
-import gnu.prolog.term.AtomTerm;
-import gnu.prolog.term.CompoundTerm;
-import gnu.prolog.term.Term;
-import gnu.prolog.term.VariableTerm;
-import gnu.prolog.vm.Environment;
-import gnu.prolog.vm.Interpreter;
-import gnu.prolog.vm.PrologCode;
-import gnu.prolog.vm.PrologException;
-
 
 public class GUI {
 
@@ -58,11 +49,6 @@ public class GUI {
 	private UndoManager undoManager = new UndoManager();
 	JButton but_redo, but_undo;
 	JMenuItem menu_redo, menu_undo;
-	
-	//Variables to Prolog environment
-	private static Environment env;
-	private static Interpreter interpreter;
-
 	
 	private GUI() {
 		initialize();
@@ -372,7 +358,7 @@ public class GUI {
 			  	}
 			    	
 		  	} catch (IllegalArgumentException e2){
-		  		 JOptionPane.showMessageDialog (frmGrupo, "La extensión del archivo es incorrecta."); 
+		  		 JOptionPane.showMessageDialog (frmGrupo, "La extensiï¿½n del archivo es incorrecta."); 
 		  	}	  	
 		    
 		} catch (Exception e1) {
@@ -459,14 +445,34 @@ public class GUI {
 	public void executeSE(){
 		saveTextEditor(JTextArea_function);
 		//TODO
-		//execute Clang with files(nameFile.cc)
-		//execute Prolog with (nameFileXML.xml)
-		showSolution(JTextArea_result);
-		
+		try {
+			String workingDirectory = System.getProperty("user.dir");
+			ProcessBuilder builder = new ProcessBuilder(workingDirectory+"/tools/runPFCTool.sh",workingDirectory+"/files/"+file+".cc",workingDirectory+"/files/"+file+"XML.xml");
+			//System.out.println("./tools/runPFCTool.sh"+"::::"+"../files/"+file+".cc"+"::::"+"../files/"+file+"XML.xml");
+			Process p = builder.start();
+			
+			int status = p.waitFor();
+			System.out.println(status);
+			System.out.println("working directory = "+System.getProperty("user.dir"));
+			if (status == 0){
+				ProcessBuilder prolog = new ProcessBuilder(workingDirectory+"/tools/runInterpreter.sh","\"interpreter('"+workingDirectory+"/files/"+file+"XML.xml','"+workingDirectory+"/files/"+file+"PL.xml').\"");
+				//System.out.println("./tools/runInterpreter.sh"+"::::"+"\"interpreter('"+file+"XML.xml','"+file+"PL.xml')\"");
+				Process p2 = prolog.start();
+				int status2 = p2.exitValue();
+				System.out.println(status2);
+				showSolution(JTextArea_result);
+			}
+			//execute Clang with files(nameFile.cc)
+			//execute Prolog with (nameFileXML.xml)
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void runGUI() {
-		// LookAndFeel + posición inicial
+		// LookAndFeel + posiciï¿½n inicial
 		try
 	    {
 	      UIManager.setLookAndFeel(new SyntheticaAluOxideLookAndFeel());
