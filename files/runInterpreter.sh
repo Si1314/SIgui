@@ -1,0 +1,1 @@
+swipl --quiet -f ./tools/Interpreter.pl -g $1 -t halt.
