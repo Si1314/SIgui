@@ -11,12 +11,12 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 inf(-3).
 sup(3).
 maxDepth(10).
 
 interpreter(EntryFile, OutFile):- 
+	write('blablabla'),
 	findall((N,L),interpreterAux(EntryFile,N,L),V),
 	%interpreterAux(N,L),
 	%write(V), write('\n'),

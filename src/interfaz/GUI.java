@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
@@ -458,6 +459,9 @@ public class GUI {
 				ProcessBuilder prolog = new ProcessBuilder("./files/runInterpreter.sh","\"interpreter('./files/"+file+"XML.xml','./files/"+file+"PL.xml').\"");
 				System.out.println(prolog.command());
 				Process p2 = prolog.start();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(p2.getInputStream()));
+				String line = reader.readLine();
+				System.out.println(line);
 				int status2 = p2.waitFor();
 				System.out.println(status2);
 				showSolution(JTextArea_result);
