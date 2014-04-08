@@ -447,18 +447,18 @@ public class GUI {
 		//TODO
 		try {
 			String workingDirectory = System.getProperty("user.dir");
-			ProcessBuilder builder = new ProcessBuilder(workingDirectory+"/files/runPFCTool.sh",workingDirectory+"/files/"+file+".cc",workingDirectory+"/files/"+file+"XML.xml");
-			//System.out.println("./tools/runPFCTool.sh"+"::::"+"../files/"+file+".cc"+"::::"+"../files/"+file+"XML.xml");
+			ProcessBuilder builder = new ProcessBuilder("./files/runPFCTool.sh",workingDirectory+"/files/"+file+".cc",workingDirectory+"/files/"+file+"XML.xml");
+			System.out.println(builder.command());
 			Process p = builder.start();
 			
 			int status = p.waitFor();
 			System.out.println(status);
 			System.out.println("working directory = "+System.getProperty("user.dir"));
 			if (status == 0){
-				ProcessBuilder prolog = new ProcessBuilder(workingDirectory+"/files/runInterpreter.sh","\"interpreter('"+file+"XML.xml','"+file+"PL.xml').\"");
-				//System.out.println("./tools/runInterpreter.sh"+"::::"+"\"interpreter('"+file+"XML.xml','"+file+"PL.xml')\"");
+				ProcessBuilder prolog = new ProcessBuilder("./files/runInterpreter.sh","\"interpreter('./files/"+file+"XML.xml','./files/"+file+"PL.xml').\"");
+				System.out.println(prolog.command());
 				Process p2 = prolog.start();
-				int status2 = p2.exitValue();
+				int status2 = p2.waitFor();
 				System.out.println(status2);
 				showSolution(JTextArea_result);
 			}
