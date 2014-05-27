@@ -45,6 +45,8 @@ public class GUI {
 	private JFrame frmGrupo;
 	private JTextArea JTextArea_function;
 	private JTextArea JTextArea_result;
+	private JTextArea JTextArea_cin;
+	private JTextArea JTextArea_cout;
 	private String file = "function";
 	private File path;
 	private UndoManager undoManager = new UndoManager();
@@ -265,7 +267,7 @@ public class GUI {
 		frmGrupo.setTitle("Ejecucion simbolica");
 		frmGrupo.setBounds(100, 100, 900, 500);
 		frmGrupo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmGrupo.getContentPane().setLayout(new MigLayout("", "[180.00,grow][680.00,grow][327.00,grow][]", "[64.00,grow][210.00,grow][64.00,grow][210.00,grow][grow 600]"));
+		frmGrupo.getContentPane().setLayout(new MigLayout("", "[100.00,grow][680.00,grow][80.00,grow][200.00,grow][100.00,grow][]", "[20.00,grow][210.00,grow][64.00,grow][210.00,grow][grow 600]"));
 		
 		frmGrupo.setJMenuBar(getMenuBar());        
         
@@ -296,6 +298,42 @@ public class GUI {
 		          }
 		    });
 		JScrollPane_function.setViewportView(JTextArea_function);
+		
+		// Text Area for Cin
+		
+		JPanel JPanel_cin = new JPanel();
+		frmGrupo.getContentPane().add(JPanel_cin, "cell 3 1,grow");
+		JPanel_cin.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
+		
+		JLabel JLabel_cin = new JLabel("Consola entrada:");
+		JLabel_cin.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel_cin.setFont(new Font("Tahoma", Font.BOLD, 12));
+		JPanel_cin.add(JLabel_cin, "cell 0 0");
+		
+		JScrollPane JScrollPane_cin = new JScrollPane();
+		JPanel_cin.add(JScrollPane_cin, "cell 0 1, grow");
+		
+		JTextArea_cin = new JTextArea();
+		JTextArea_cin.setEditable(false);
+		JScrollPane_cin.setViewportView(JTextArea_cin);
+		
+		// Text Area for Cout
+		
+		JPanel JPanel_cout = new JPanel();
+		frmGrupo.getContentPane().add(JPanel_cout, "cell 3 3,grow");
+		JPanel_cout.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
+		
+		JLabel JLabel_cout = new JLabel("Consola salida:");
+		JLabel_cout.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel_cout.setFont(new Font("Tahoma", Font.BOLD, 12));
+		JPanel_cout.add(JLabel_cout, "cell 0 0");
+		
+		JScrollPane JScrollPane_cout = new JScrollPane();
+		JPanel_cout.add(JScrollPane_cout, "cell 0 1, grow");
+		
+		JTextArea_cout = new JTextArea();
+		JTextArea_cout.setEditable(false);
+		JScrollPane_cout.setViewportView(JTextArea_cout);
 		
 		// Boton play
 		
