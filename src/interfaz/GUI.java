@@ -32,6 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -40,6 +41,7 @@ import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.StyledDocument;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.UndoManager;
 
@@ -51,7 +53,7 @@ import net.miginfocom.swing.MigLayout;
 public class GUI {
 
 	private JFrame frmGrupo;
-	private JTextArea JTextArea_function;
+	private JTextPane JTextPane_function;
 	private JTable JTable_result;
 	private JTextArea JTextArea_cin;
 	private JTextArea JTextArea_cout;
@@ -63,8 +65,8 @@ public class GUI {
 	
 	ArrayList<ArrayList<ArrayList<ArrayList<String>>>> infoFunction;
 	
-	int max_int = 1000;
-	int min_int = -1000;
+	int max_int = 20;
+	int min_int = -5;
 	int loops_length = 10;
 	
 	private GUI() {
@@ -169,7 +171,7 @@ public class GUI {
 			//menu_selectall.setEnabled(false);
 			menu_selectall.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					JTextArea_function.selectAll();
+					JTextPane_function.selectAll();
 				}
 			});
 		edit.add(menu_undo);
@@ -356,10 +358,11 @@ public class GUI {
 		JLabel_function.setFont(new Font("Tahoma", Font.BOLD, 12));
 		JPanel_function.add(JLabel_function, "cell 0 0");
 		
-		JScrollPane JScrollPane_function = new JScrollPane();
-		JPanel_function.add(JScrollPane_function, "cell 0 1,grow");
+		//JScrollPane JScrollPane_function = new JScrollPane();
+		//JPanel_function.add(JScrollPane_function, "cell 0 1,grow");
 		
-		JTextArea_function = new JTextArea();
+		//TextLineNumber tln = new TextLineNumber(JTextArea_function);
+		/*JTextArea_function = new JTextArea();
 		JTextArea_function.setEditable(true);
 			JTextArea_function.getDocument().addUndoableEditListener(
 		        new UndoableEditListener() {
@@ -368,7 +371,13 @@ public class GUI {
 		            updateUndoRedo();
 		          }
 		    });
-		JScrollPane_function.setViewportView(JTextArea_function);
+		    */
+		JTextPane_function = new JTextPane();
+		JScrollPane JScrollPane_function = new JScrollPane(JTextPane_function);
+		TextLineNumber tln = new TextLineNumber(JTextPane_function);
+		JScrollPane_function.setViewportView(JTextPane_function);
+		JPanel_function.add(JScrollPane_function, "cell 0 1,grow");
+		JScrollPane_function.setRowHeaderView(tln);
 		
 		// Text Area for Cin
 		
@@ -514,7 +523,7 @@ public class GUI {
 	    }
 		
 		if (!cerradoDialog){
-			printFile(JTextArea_function);
+			printFile(JTextPane_function);
 		}
 	}
 	
@@ -556,15 +565,16 @@ public class GUI {
 		}
 	}
 	
-	public void printFile (JTextArea jtextarea){
+	public void printFile (JTextPane jtextpane){
         try {  
-        	jtextarea.setText("");
+        	jtextpane.setText("");
         	FileReader lector = new FileReader(path);
             BufferedReader buffer = new BufferedReader(lector);
             String linea = "";
+            StyledDocument doc = jtextpane.getStyledDocument();
             
-            while((linea = buffer.readLine()) != null){
-            	jtextarea.append(linea + "\n");
+            while((linea = buffer.readLine()) != null){            	
+            	doc.insertString(doc.getLength(), linea + "\n", null);
             }
             buffer.close();
             lector.close();
@@ -583,7 +593,8 @@ public class GUI {
 				folder.mkdir();
 			}
 			pw = new FileWriter ("./files/"+file+".cc");
-			JTextArea_function.write(pw); //Object of JTextArea
+			pw.write(JTextPane_function.getText());
+			//JTextPane_function.write(pw); //Object of JTextArea
 	        pw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
