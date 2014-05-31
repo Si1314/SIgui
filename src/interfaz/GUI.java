@@ -5,16 +5,17 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
@@ -30,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -54,12 +56,16 @@ public class GUI {
 	private JTextArea JTextArea_cin;
 	private JTextArea JTextArea_cout;
 	private String file = "function";
-	private File path;
+	private File path, path_clang;
 	private UndoManager undoManager = new UndoManager();
 	JButton but_redo, but_undo;
 	JMenuItem menu_redo, menu_undo;
 	
 	ArrayList<ArrayList<ArrayList<ArrayList<String>>>> infoFunction;
+	
+	int max_int = 1000;
+	int min_int = -1000;
+	int loops_length = 10;
 	
 	private GUI() {
 		initialize();
@@ -92,7 +98,7 @@ public class GUI {
 			menu_open.setIcon(new ImageIcon("./img/Open-12.png"));
 			menu_open.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					openFile();
+					openFileCC();
 				}
 			});
 		JMenuItem menu_save = new JMenuItem("Save");
@@ -118,6 +124,7 @@ public class GUI {
 		file.addSeparator();
 		file.add(menu_exit);
 		menubar.add(file);
+		
 		JMenu edit = new JMenu("Edit");
 		menu_undo = new JMenuItem("Undo");
 			menu_undo.setEnabled(false);
@@ -176,6 +183,62 @@ public class GUI {
 		edit.add(menu_selectall);
 		menubar.add(edit);
 		
+		JMenu debug = new JMenu("Debug");
+		JMenuItem menu_ChangeParams = new JMenuItem("Change Params to run");
+		menu_ChangeParams.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextField maxInt = new JTextField(Integer.toString(max_int));
+				JTextField minInt = new JTextField(Integer.toString(min_int));
+				JTextField loops = new JTextField(Integer.toString(loops_length));
+				Object[] options = {
+				    "Max Int:", maxInt,
+				    "Min Int:", minInt,
+				    "Length Loop:", loops
+				};
+				int option = JOptionPane.showConfirmDialog(null, options, "Config params to run", JOptionPane.OK_CANCEL_OPTION);
+				if (option == JOptionPane.OK_OPTION){
+					max_int = Integer.parseInt(maxInt.getText());
+					min_int = Integer.parseInt(minInt.getText());
+					loops_length = Integer.parseInt(loops.getText());
+				}
+				
+			}
+		});
+		JMenuItem menu_WatchClang = new JMenuItem("Watch Clang directory");
+		menu_WatchClang.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				JOptionPane.showMessageDialog (frmGrupo, path_clang.toString());
+			}
+		});
+		JMenuItem menu_BrowseClang = new JMenuItem("Change Clang directory");
+		menu_BrowseClang.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				openFileClang();
+			}
+		});
+		JMenuItem menu_XMLclang = new JMenuItem("See XML from Clang");
+		menu_XMLclang.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { 
+			}
+		});
+		JMenuItem menu_XMLprolog = new JMenuItem("See XML from Prolog");
+		menu_XMLprolog.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+		
+		debug.add(menu_ChangeParams);
+		debug.addSeparator();
+		debug.add(menu_WatchClang);
+		debug.add(menu_BrowseClang);
+		debug.addSeparator();
+		debug.add(menu_XMLclang);
+		debug.add(menu_XMLprolog);
+		menubar.add(debug);
+		
+		
 		return menubar;
 	}
 	
@@ -194,7 +257,7 @@ public class GUI {
         JButton but_open = new JButton(icon_open);
         	but_open.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					openFile();
+					openFileCC();
 				}
 			});
         JButton but_cut = new JButton(new DefaultEditorKit.CutAction());
@@ -375,8 +438,44 @@ public class GUI {
 		String[] columnNames = {"","Variable name","Value"};
 		Object[][] data = {};
 		JTable_result = new JTable(new DefaultTableModel(data,columnNames){public boolean isCellEditable(int row, int column) { return false;}});
+		JTable_result.addMouseListener(new MouseAdapter() {
+			  public void mouseClicked(MouseEvent e) {
+			    if (e.getClickCount() == 2) {
+			      JTable target = (JTable)e.getSource();
+			      int row = target.getSelectedRow();
+			      showInfo(row);
+			      // do some action if appropriate column
+			    }
+			  }
+			});
 		//JTable_result.getColumnModel().getColumn(1).setCellRenderer(new MultiLineCellRenderer());
 		JScrollPane_result.setViewportView(JTable_result);
+		
+		/* Comprobar herramienta y sino pedir ruta */
+		File config_file = new File("./config/config_file.txt");
+		if(!config_file.exists()){
+			Object[] options = { "Browse" };
+			int rc = -1;
+			rc = JOptionPane.showOptionDialog(null, 
+					"Please, select where have you installed Clang",
+					"",JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+					null, options, options[0]);
+			if (rc == 0)
+				openFileClang();
+			//JOptionPane.showMessageDialog(null, "Please, select where have you installed Clang");
+		}
+		else {
+			FileReader lector;
+			try {
+				lector = new FileReader("./config/config_file.txt");
+				BufferedReader buffer = new BufferedReader(lector);
+				path_clang = new File(buffer.readLine());
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
 		
 	}
 	
@@ -387,7 +486,7 @@ public class GUI {
 		menu_redo.setEnabled(undoManager.canRedo());
 	}
 	
-	public void openFile(){
+	public void openFileCC(){
 		boolean cerradoDialog = false;
 		try {
 		  	JFileChooser selecFich = new JFileChooser();
@@ -416,6 +515,44 @@ public class GUI {
 		
 		if (!cerradoDialog){
 			printFile(JTextArea_function);
+		}
+	}
+	
+	public void openFileClang(){
+		boolean cerradoDialog = false;
+		try {
+		  	JFileChooser selecFich = new JFileChooser();
+		  	selecFich.setDialogTitle("Elegir la aplicacion");
+		  	//try {
+		  		//FileNameExtensionFilter filtro=new FileNameExtensionFilter("C++ file","cpp","cc");
+			  	//selecFich.setFileFilter(filtro);
+			  	//System.out.print(filtro.toString());
+			  	
+			  	cerradoDialog = selecFich.showOpenDialog(frmGrupo)== JFileChooser.CANCEL_OPTION;
+							    	
+			  	if (!cerradoDialog){
+			  		path_clang = selecFich.getSelectedFile();
+			  		System.out.println(path_clang.toString());
+			  		//file = file.substring(0, file.lastIndexOf("."));
+			  		//System.out.println(file.toString());
+			  	}
+			  	
+		} catch (Exception e1) {
+	    	 JOptionPane.showMessageDialog (frmGrupo, "No has seleccionado ningun fichero"); 
+	    }
+		if (!cerradoDialog){
+			FileWriter pw;
+			try {
+				File folder = new File("./config");
+				if (!folder.exists()) {
+					folder.mkdir();
+				}
+				pw = new FileWriter ("./config/"+"config_file"+".txt");
+				pw.write(path_clang.toString()); //Object of JTextArea
+		        pw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -482,7 +619,7 @@ public class GUI {
             		variables.clear();
             	}
             	else if (line.contains("</data>")){
-            		current.add(1,data);
+            		current.add(1,(ArrayList<ArrayList<String>>) data.clone());
             		data.clear();
             	}
             	else if (line.contains("<traza/>")){
@@ -516,7 +653,7 @@ public class GUI {
             		}
             		if (line.contains("<traza>")){
             			//Parser traza
-            			String aux_trace = line.substring(line.indexOf(">")+1,line.lastIndexOf("<"));
+            			String aux_trace = line.substring(line.indexOf(">")+2,line.lastIndexOf("<"));
             			trace = new ArrayList<String>(Arrays.asList(aux_trace.split(" ")));
             			//trace = new String[aux_trace.split(" ").length];
             			data.add(0,(ArrayList<String>) trace.clone());
@@ -524,14 +661,14 @@ public class GUI {
             		}
             		if (line.contains("<cin>")){
             			//Parser cin
-            			String aux_trace = line.substring(line.indexOf(">")+1,line.lastIndexOf("<"));
+            			String aux_trace = line.substring(line.indexOf(">")+2,line.lastIndexOf("<"));
             			cin = new ArrayList<String>(Arrays.asList(aux_trace.split(" ")));
             			data.add(1,(ArrayList<String>) cin.clone());
             			cin.clear();
             		}
             		if (line.contains("<cout>")){
             			//Parser cout
-            			String aux_trace = line.substring(line.indexOf(">")+1,line.lastIndexOf("<"));
+            			String aux_trace = line.substring(line.indexOf(">")+2,line.lastIndexOf("<"));
             			cout = new ArrayList<String>(Arrays.asList(aux_trace.split(" ")));
             			data.add(2,(ArrayList<String>) cout.clone());
             			cout.clear();
@@ -548,6 +685,27 @@ public class GUI {
 		return result;
 	}
 	
+	public void showInfo(int i){
+		ArrayList<ArrayList<String>> data_aux = infoFunction.get(i).get(1);
+		//Show cin
+		if(data_aux.get(1).size() > 0){
+			Iterator<String> it1 = data_aux.get(1).iterator();
+			while (it1.hasNext()){
+				JTextArea_cin.append(it1.next() + "\n");
+			}
+		}
+		//Show cout
+		if(data_aux.get(2).size() > 0){
+			Iterator<String> it2 = data_aux.get(2).iterator();
+			while (it2.hasNext()){
+				JTextArea_cout.append(it2.next() + "\n");
+			}
+		}
+		//Color trace
+		if(data_aux.get(0).size() > 0){
+			
+		}
+	}
 	
 	public void showSolution(){
 		infoFunction = parserXML();
@@ -653,6 +811,7 @@ public class GUI {
 		try
 	    {
 	      UIManager.setLookAndFeel(new SyntheticaAluOxideLookAndFeel());
+	      
 	    }
 	    catch (Exception e)
 	    {

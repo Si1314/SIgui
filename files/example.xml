@@ -3,8 +3,8 @@
   <variable name="a" value="0"/>
   <data>
     <traza> 33 34 35 36 40</traza>
-    <cin/>
-    <cout/>
+    <cin> 4</cin>
+    <cout> 8 10</cout>
   </data>
 </caso>
 <caso>
