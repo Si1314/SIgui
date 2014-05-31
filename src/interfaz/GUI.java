@@ -11,6 +11,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
@@ -24,6 +28,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -31,6 +36,7 @@ import javax.swing.UIManager;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.UndoManager;
@@ -44,7 +50,7 @@ public class GUI {
 
 	private JFrame frmGrupo;
 	private JTextArea JTextArea_function;
-	private JTextArea JTextArea_result;
+	private JTable JTable_result;
 	private JTextArea JTextArea_cin;
 	private JTextArea JTextArea_cout;
 	private String file = "function";
@@ -52,6 +58,8 @@ public class GUI {
 	private UndoManager undoManager = new UndoManager();
 	JButton but_redo, but_undo;
 	JMenuItem menu_redo, menu_undo;
+	
+	ArrayList<ArrayList<ArrayList<ArrayList<String>>>> infoFunction;
 	
 	private GUI() {
 		initialize();
@@ -356,7 +364,7 @@ public class GUI {
 		frmGrupo.getContentPane().add(JPanel_result, "cell 1 3,grow");
 		JPanel_result.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
-		JLabel JLabel_result = new JLabel("Salidas de la funci\u00F3n:");
+		JLabel JLabel_result = new JLabel("Tabla resultados:");
 		JLabel_result.setHorizontalAlignment(SwingConstants.CENTER);
 		JLabel_result.setFont(new Font("Tahoma", Font.BOLD, 12));
 		JPanel_result.add(JLabel_result, "cell 0 0");
@@ -364,9 +372,11 @@ public class GUI {
 		JScrollPane JScrollPane_result = new JScrollPane();
 		JPanel_result.add(JScrollPane_result, "cell 0 1, grow");
 		
-		JTextArea_result = new JTextArea();
-		JTextArea_result.setEditable(false);
-		JScrollPane_result.setViewportView(JTextArea_result);
+		String[] columnNames = {"","Variable name","Value"};
+		Object[][] data = {};
+		JTable_result = new JTable(new DefaultTableModel(data,columnNames){public boolean isCellEditable(int row, int column) { return false;}});
+		//JTable_result.getColumnModel().getColumn(1).setCellRenderer(new MultiLineCellRenderer());
+		JScrollPane_result.setViewportView(JTable_result);
 		
 	}
 	
@@ -443,7 +453,126 @@ public class GUI {
 		}
 	}
 	
-	public void showSolution(JTextArea jtextarea){
+	public ArrayList<ArrayList<ArrayList<ArrayList<String>>>> parserXML(){
+		ArrayList<ArrayList<ArrayList<ArrayList<String>>>> result = new ArrayList<ArrayList<ArrayList<ArrayList<String>>>>();
+		try{
+			FileReader lector = new FileReader("./files/"+"example"+".xml");
+			BufferedReader buffer = new BufferedReader(lector);
+            String line = "";
+            ArrayList<ArrayList<ArrayList<String>>> current = new ArrayList<ArrayList<ArrayList<String>>>(2);
+            ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+            ArrayList<ArrayList<String>>variables = new ArrayList<ArrayList<String>>();
+            ArrayList<String> variable = new ArrayList<String>();
+            ArrayList<String> trace = new ArrayList<String>();
+            ArrayList<String> cin = new ArrayList<String>();
+            ArrayList<String> cout = new ArrayList<String>();
+            
+            int count = 0;
+            
+            while((line = buffer.readLine()) != null){
+            	if (line.contains("<caso>")){
+            		count ++;
+            	}
+            	else if (line.contains("</caso>")){
+            		result.add((ArrayList<ArrayList<ArrayList<String>>>) current.clone());
+            		current.clear();
+            	}
+            	else if (line.contains("<data>")){
+            		current.add(0,(ArrayList<ArrayList<String>>) variables.clone());
+            		variables.clear();
+            	}
+            	else if (line.contains("</data>")){
+            		current.add(1,data);
+            		data.clear();
+            	}
+            	else if (line.contains("<traza/>")){
+            		data.add(0,(ArrayList<String>) trace.clone());
+        			trace.clear();
+            	}
+            	else if (line.contains("<cin/>")){
+            		data.add(1,(ArrayList<String>) cin.clone());
+        			cin.clear();
+            	}
+            	else if (line.contains("<cout/>")){
+            		data.add(2,(ArrayList<String>) cout.clone());
+        			cout.clear();
+            	}
+            	else{ //Content case
+            		if (line.contains("<variable")){
+            			//Parser variable line
+            			StringTokenizer aux = new StringTokenizer(line, " ");
+                		String word = "";
+                		while (aux.hasMoreTokens()){
+                			word = aux.nextToken();
+                    		if (word.contains("name")){
+                    			variable.add(word.substring(word.indexOf("\"")+1, word.lastIndexOf("\"")));
+                    		}
+                    		else if (word.contains("value")){
+                    			variable.add(word.substring(word.indexOf("\"")+1, word.lastIndexOf("\"")));
+                    		}
+                		}
+            			variables.add((ArrayList<String>) variable.clone());
+            			variable.clear();
+            		}
+            		if (line.contains("<traza>")){
+            			//Parser traza
+            			String aux_trace = line.substring(line.indexOf(">")+1,line.lastIndexOf("<"));
+            			trace = new ArrayList<String>(Arrays.asList(aux_trace.split(" ")));
+            			//trace = new String[aux_trace.split(" ").length];
+            			data.add(0,(ArrayList<String>) trace.clone());
+            			trace.clear();
+            		}
+            		if (line.contains("<cin>")){
+            			//Parser cin
+            			String aux_trace = line.substring(line.indexOf(">")+1,line.lastIndexOf("<"));
+            			cin = new ArrayList<String>(Arrays.asList(aux_trace.split(" ")));
+            			data.add(1,(ArrayList<String>) cin.clone());
+            			cin.clear();
+            		}
+            		if (line.contains("<cout>")){
+            			//Parser cout
+            			String aux_trace = line.substring(line.indexOf(">")+1,line.lastIndexOf("<"));
+            			cout = new ArrayList<String>(Arrays.asList(aux_trace.split(" ")));
+            			data.add(2,(ArrayList<String>) cout.clone());
+            			cout.clear();
+            		}	
+            	}
+            }
+            buffer.close();
+            lector.close();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		infoFunction = result;
+		return result;
+	}
+	
+	
+	public void showSolution(){
+		infoFunction = parserXML();
+		Iterator<ArrayList<ArrayList<ArrayList<String>>>> it0 = infoFunction.iterator();
+		int count = 0;
+		while(it0.hasNext()){
+			ArrayList<ArrayList<ArrayList<String>>> aux0 = it0.next();
+			Object[] current_case = new Object[3];
+			current_case[0] = count;
+			current_case[1] = "";
+			current_case[2] = "";
+			aux0.get(0);
+			Iterator<ArrayList<String>> it1 = aux0.get(0).iterator();
+			while(it1.hasNext()){
+				ArrayList<String> aux1 = it1.next();
+				current_case[1] += aux1.get(0);
+				current_case[1] += " \n ";
+				current_case[2] += aux1.get(1);
+				current_case[2] += " \n ";
+			}
+			DefaultTableModel model = (DefaultTableModel) JTable_result.getModel();
+			model.addRow(current_case);
+		}
+		
+		/*
 		try {  
         	jtextarea.setText("");
         	FileReader lector = new FileReader("./files/"+file+"PL.xml");
@@ -479,9 +608,12 @@ public class GUI {
         catch(Exception e){     
         	e.printStackTrace();
         }
+        */
 	}
 	
 	public void executeSE(){
+		showSolution();
+		/*
 		saveTextEditor(JTextArea_function);
 		//TODO
 		try {
@@ -497,6 +629,7 @@ public class GUI {
 				ProcessBuilder prolog = new ProcessBuilder("./files/runInterpreter.sh","\"interpreter('./files/"+file+"XML.xml','./files/"+file+"PL.xml').\"");
 				System.out.println(prolog.command());
 				Process p2 = prolog.start();
+				//Read XML file
 				BufferedReader reader = new BufferedReader(new InputStreamReader(p2.getInputStream()));
 				String line = reader.readLine();
 				System.out.println(line);
@@ -511,6 +644,8 @@ public class GUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
+		
 	}
 	
 	public void runGUI() {
