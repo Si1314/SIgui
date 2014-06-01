@@ -1,12 +1,18 @@
 package interfaz;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,40 +40,64 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
+import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.event.UndoableEditEvent;
-import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultEditorKit;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.UndoManager;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import lineNumber.LineNumberComponent;
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
 import net.miginfocom.swing.MigLayout;
+import xmlViewer.XML2JTree;
+import multiline.MultiLineCellRenderer;
 
 
 public class GUI {
 
 	private JFrame frmGrupo;
 	private JTextPane JTextPane_function;
+	//private JTextArea JTextArea_function;
 	private JTable JTable_result;
 	private JTextArea JTextArea_cin;
 	private JTextArea JTextArea_cout;
-	private String file = "function";
+	private String file_name = "function";
 	private File path, path_clang;
 	private UndoManager undoManager = new UndoManager();
+	
+	private LineNumberComponent lineNumberComponent;
+	//private LineNumberModelImpl lineNumberModel;
+
 	JButton but_redo, but_undo;
 	JMenuItem menu_redo, menu_undo;
+	
+	String [] text_function;
+	String [] text_styles;
 	
 	ArrayList<ArrayList<ArrayList<ArrayList<String>>>> infoFunction;
 	
 	int max_int = 20;
 	int min_int = -5;
 	int loops_length = 10;
+	
+	private  JTree    JTree_XML;
+	private static    JFrame   JFrame_XML;
+
+	public static final int FRAME_WIDTH = 440;
+	public static final int FRAME_HEIGHT = 280;
 	
 	private GUI() {
 		initialize();
@@ -221,13 +251,15 @@ public class GUI {
 		});
 		JMenuItem menu_XMLclang = new JMenuItem("See XML from Clang");
 		menu_XMLclang.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { 
+			public void actionPerformed(ActionEvent e) {
+				
+				showXML("./files/"+file_name+"XML.xml");
 			}
 		});
 		JMenuItem menu_XMLprolog = new JMenuItem("See XML from Prolog");
 		menu_XMLprolog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				showXML("./files/"+file_name+"PL.xml");
 			}
 		});
 		
@@ -336,11 +368,12 @@ public class GUI {
 	    }
 		
 		frmGrupo = new JFrame();
+		frmGrupo.pack();
 		frmGrupo.setLocationRelativeTo(null);
 		frmGrupo.setTitle("Ejecucion simbolica");
 		frmGrupo.setBounds(100, 100, 900, 500);
 		frmGrupo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmGrupo.getContentPane().setLayout(new MigLayout("", "[100.00,grow][680.00,grow][80.00,grow][200.00,grow][100.00,grow][]", "[20.00,grow][210.00,grow][64.00,grow][210.00,grow][grow 600]"));
+		frmGrupo.getContentPane().setLayout(new MigLayout("", "[80.00,grow][680.00,grow][50.00,grow][250.00,grow][80.00,grow][]", "[20.00,grow][210.00,grow][20.00,grow][150.00,grow][20.00,grow][150.00,grow][20.00,grow][grow 600]"));
 		
 		frmGrupo.setJMenuBar(getMenuBar());        
         
@@ -350,7 +383,7 @@ public class GUI {
 		//Text Area for function
 		
 		JPanel JPanel_function = new JPanel();
-		frmGrupo.getContentPane().add(JPanel_function, "cell 1 1,grow");
+		frmGrupo.getContentPane().add(JPanel_function, "cell 1 1 1 5,grow");
 		JPanel_function.setLayout(new MigLayout("", "[grow]", "[16.00][grow]"));
 		
 		JLabel JLabel_function = new JLabel("C\u00F3digo de la funci\u00F3n:");
@@ -358,11 +391,13 @@ public class GUI {
 		JLabel_function.setFont(new Font("Tahoma", Font.BOLD, 12));
 		JPanel_function.add(JLabel_function, "cell 0 0");
 		
-		//JScrollPane JScrollPane_function = new JScrollPane();
-		//JPanel_function.add(JScrollPane_function, "cell 0 1,grow");
+		/*
+		JScrollPane JScrollPane_function = new JScrollPane(JTextArea_function);
+		JPanel_function.add(JScrollPane_function, "cell 0 1,grow");
 		
 		//TextLineNumber tln = new TextLineNumber(JTextArea_function);
-		/*JTextArea_function = new JTextArea();
+		JTextArea_function = new JTextArea();
+		//lineNumberComponent.setAlignment(LineNumberComponent.CENTER_ALIGNMENT);
 		JTextArea_function.setEditable(true);
 			JTextArea_function.getDocument().addUndoableEditListener(
 		        new UndoableEditListener() {
@@ -371,18 +406,42 @@ public class GUI {
 		            updateUndoRedo();
 		          }
 		    });
-		    */
+			/*JTextArea_function.getDocument().addDocumentListener(new DocumentListener(){
+				public void changedUpdate(DocumentEvent arg0) {
+					lineNumberComponent.adjustWidth();
+				}
+				public void insertUpdate(DocumentEvent arg0) {
+					lineNumberComponent.adjustWidth();
+				}
+				public void removeUpdate(DocumentEvent arg0) {
+					lineNumberComponent.adjustWidth();
+				}
+			});
+			
+			JTextArea_function.setText("This is a demonstration of...\n...line numbering using a JText area within...\n...a JScrollPane");
+*/
+		    
+		
 		JTextPane_function = new JTextPane();
+		
 		JScrollPane JScrollPane_function = new JScrollPane(JTextPane_function);
-		TextLineNumber tln = new TextLineNumber(JTextPane_function);
+		//lineNumberModel = new LineNumberModelImpl();
+		//lineNumberComponent = new LineNumberComponent(lineNumberModel);
+
+		JScrollPane_function.setRowHeaderView(lineNumberComponent);
+		
+		//TextLineNumber tln = new TextLineNumber(JTextPane_function);
+		
 		JScrollPane_function.setViewportView(JTextPane_function);
+		
 		JPanel_function.add(JScrollPane_function, "cell 0 1,grow");
-		JScrollPane_function.setRowHeaderView(tln);
+		
+		//JScrollPane_function.setRowHeaderView(tln);
 		
 		// Text Area for Cin
 		
 		JPanel JPanel_cin = new JPanel();
-		frmGrupo.getContentPane().add(JPanel_cin, "cell 3 1,grow");
+		frmGrupo.getContentPane().add(JPanel_cin, "cell 3 3,grow");
 		JPanel_cin.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
 		JLabel JLabel_cin = new JLabel("Consola entrada:");
@@ -400,7 +459,7 @@ public class GUI {
 		// Text Area for Cout
 		
 		JPanel JPanel_cout = new JPanel();
-		frmGrupo.getContentPane().add(JPanel_cout, "cell 3 3,grow");
+		frmGrupo.getContentPane().add(JPanel_cout, "cell 3 5,grow");
 		JPanel_cout.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
 		JLabel JLabel_cout = new JLabel("Consola salida:");
@@ -416,7 +475,7 @@ public class GUI {
 		JScrollPane_cout.setViewportView(JTextArea_cout);
 		
 		// Boton play
-		
+		/*
 		JPanel JPanel_play = new JPanel();
 		frmGrupo.getContentPane().add(JPanel_play, "cell 1 2,grow");
 		JPanel_play.setLayout(new MigLayout("","[right]","[grow]"));
@@ -428,12 +487,12 @@ public class GUI {
 				}
 			});
 		JPanel_play.add(JButton_play, "align right");
-		
+		*/
 		
 		// Zona resultado
 		
 		JPanel JPanel_result = new JPanel();
-		frmGrupo.getContentPane().add(JPanel_result, "cell 1 3,grow");
+		frmGrupo.getContentPane().add(JPanel_result, "cell 3 1,grow");
 		JPanel_result.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
 		JLabel JLabel_result = new JLabel("Tabla resultados:");
@@ -447,6 +506,7 @@ public class GUI {
 		String[] columnNames = {"","Variable name","Value"};
 		Object[][] data = {};
 		JTable_result = new JTable(new DefaultTableModel(data,columnNames){public boolean isCellEditable(int row, int column) { return false;}});
+		JTable_result.setDefaultRenderer(String.class, new MultiLineCellRenderer());
 		JTable_result.addMouseListener(new MouseAdapter() {
 			  public void mouseClicked(MouseEvent e) {
 			    if (e.getClickCount() == 2) {
@@ -509,9 +569,9 @@ public class GUI {
 							    	
 			  	if (!cerradoDialog){
 			  		path = selecFich.getSelectedFile();
-			  		file = path.getName();
-			  		file = file.substring(0, file.lastIndexOf("."));
-			  		System.out.println(file.toString());
+			  		file_name = path.getName();
+			  		file_name = file_name.substring(0, file_name.lastIndexOf("."));
+			  		System.out.println(file_name.toString());
 			  	}
 			    	
 		  	} catch (IllegalArgumentException e2){
@@ -584,7 +644,7 @@ public class GUI {
         }
 	}
 	
-	public void saveTextEditor(JTextArea jtextarea){
+	public void saveTextEditor(){
 		//String fileName = JOptionPane.showInputDialog("Enter file name");//String finalFileName = fileName.getText();
         FileWriter pw;
 		try {
@@ -592,9 +652,10 @@ public class GUI {
 			if (!folder.exists()) {
 				folder.mkdir();
 			}
-			pw = new FileWriter ("./files/"+file+".cc");
+			pw = new FileWriter ("./files/"+file_name+".cc");
 			pw.write(JTextPane_function.getText());
-			//JTextPane_function.write(pw); //Object of JTextArea
+			text_function = JTextPane_function.getText().split("\n");
+			//JTextArea_function.write(pw); //Object of JTextArea
 	        pw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -698,6 +759,8 @@ public class GUI {
 	
 	public void showInfo(int i){
 		ArrayList<ArrayList<String>> data_aux = infoFunction.get(i).get(1);
+		JTextArea_cin.setText("");
+		JTextArea_cout.setText("");
 		//Show cin
 		if(data_aux.get(1).size() > 0){
 			Iterator<String> it1 = data_aux.get(1).iterator();
@@ -718,11 +781,74 @@ public class GUI {
 		}
 	}
 	
+	public void showXML (String filename){
+		Document doc = null;
+		
+		// Create a frame to "hold" our class
+		JFrame_XML = new JFrame("XML to JTree");
+
+		   Toolkit toolkit = Toolkit.getDefaultToolkit();
+		   Dimension dim = toolkit.getScreenSize();
+		   int screenHeight = dim.height;
+		   int screenWidth = dim.width;
+
+		   // This should display a WIDTH x HEIGHT sized Frame in the middle of the screen
+		   JFrame_XML.setBounds( (screenWidth-FRAME_WIDTH)/2,
+		      (screenHeight-FRAME_HEIGHT)/2, FRAME_WIDTH, FRAME_HEIGHT );
+
+		   JFrame_XML.setBackground(Color.lightGray);
+		   JFrame_XML.getContentPane().setLayout(new BorderLayout());
+
+		   // Give our frame an icon when it's minimized.
+		   JFrame_XML.setIconImage(toolkit.getImage("Wrox.gif"));
+
+		   // Add a WindowListener so that we can close the window
+		   WindowListener wndCloser = new WindowAdapter()
+		   {
+		      public void windowClosing(WindowEvent e)
+		      {
+		         //exit();
+		      }
+		   };
+		   JFrame_XML.addWindowListener(wndCloser);
+		   try
+		   {
+		      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		      dbf.setValidating(false);  // Not important fro this demo
+
+		      DocumentBuilder db = dbf.newDocumentBuilder();
+		      doc = db.parse(filename);
+		   }
+		   catch( FileNotFoundException fnfEx )
+		   {
+		      // Display a "nice" warning message if the file isn't there.
+		      JOptionPane.showMessageDialog(JFrame_XML, filename+" was not found",
+		         "Warning", JOptionPane.WARNING_MESSAGE);
+		      System.out.println();
+		   }
+		   catch( Exception ex )
+		   {
+		      JOptionPane.showMessageDialog(JFrame_XML, ex.getMessage(), "Exception",
+		                                    JOptionPane.WARNING_MESSAGE);
+		      ex.printStackTrace();
+		   }
+
+		   Node root = (Node)doc.getDocumentElement();
+		   JFrame_XML.getContentPane().add(new XML2JTree( root, true, JTree_XML, JFrame_XML ),
+		      BorderLayout.CENTER);
+		   JFrame_XML.validate();
+		   JFrame_XML.setVisible(true);
+	}
+	
 	public void showSolution(){
 		infoFunction = parserXML();
+		DefaultTableModel model = (DefaultTableModel) JTable_result.getModel();
+	    model.setRowCount(0);
 		Iterator<ArrayList<ArrayList<ArrayList<String>>>> it0 = infoFunction.iterator();
 		int count = 0;
+		int lines = 0;
 		while(it0.hasNext()){
+			lines = 0;
 			ArrayList<ArrayList<ArrayList<String>>> aux0 = it0.next();
 			Object[] current_case = new Object[3];
 			current_case[0] = count;
@@ -731,14 +857,17 @@ public class GUI {
 			aux0.get(0);
 			Iterator<ArrayList<String>> it1 = aux0.get(0).iterator();
 			while(it1.hasNext()){
+				lines ++;
 				ArrayList<String> aux1 = it1.next();
 				current_case[1] += aux1.get(0);
 				current_case[1] += " \n ";
 				current_case[2] += aux1.get(1);
 				current_case[2] += " \n ";
 			}
-			DefaultTableModel model = (DefaultTableModel) JTable_result.getModel();
 			model.addRow(current_case);
+			JTable_result.setRowHeight(count,JTable_result.getRowHeight(count)*lines);
+			
+			count++;
 		}
 		
 		/*
@@ -781,6 +910,7 @@ public class GUI {
 	}
 	
 	public void executeSE(){
+		saveTextEditor();
 		showSolution();
 		/*
 		saveTextEditor(JTextArea_function);
@@ -829,4 +959,24 @@ public class GUI {
 	      e.printStackTrace();
 	    }
 	}
+	
+	/*
+	private class LineNumberModelImpl implements LineNumberModel{
+		public int getNumberLines() {
+			return JTextArea_function.getLineCount();
+		}
+		public Rectangle getLineRect(int line) {
+			try{
+				return JTextArea_function.modelToView(JTextArea_function.getLineStartOffset(line));
+			}catch(BadLocationException e){
+				e.printStackTrace();
+				return new Rectangle();
+
+			}
+
+		}
+
+	}
+	*/
+	
 }

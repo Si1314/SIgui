@@ -1,4 +1,4 @@
-package interfaz;
+package lineNumber;
 
 import java.awt.Rectangle;
 

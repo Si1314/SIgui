@@ -3,18 +3,15 @@ package interfaz;
 import java.awt.Rectangle;
 
 import javax.swing.JFrame;
-
 import javax.swing.JScrollPane;
-
 import javax.swing.JTextArea;
-
 import javax.swing.SwingUtilities;
-
 import javax.swing.event.DocumentEvent;
-
 import javax.swing.event.DocumentListener;
-
 import javax.swing.text.BadLocationException;
+
+import lineNumber.LineNumberComponent;
+import lineNumber.LineNumberModel;
 
 /**
 
