@@ -67,11 +67,13 @@ import org.w3c.dom.Node;
 
 
 
+
 //import lineNumber.LineNumberComponent;
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
 import net.miginfocom.swing.MigLayout;
 import xmlViewer.XML2JTree;
+import lineNumbers.LineNumbers;
 import multiline.MultiLineCellRenderer;
 
 
@@ -431,6 +433,9 @@ public class GUI {
 
 
 		JScrollPane JScrollPane_function = new JScrollPane(JTextPane_function);
+		LineNumbers lineNums = new LineNumbers( JTextPane_function );
+		JScrollPane_function.setRowHeaderView( lineNums );
+		JTextPane_function.requestFocus();
 		
 		JScrollPane_function.setViewportView(JTextPane_function);
 		
