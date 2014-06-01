@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -43,12 +44,15 @@ import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultEditorKit;
-import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.UndoManager;
@@ -58,7 +62,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import lineNumber.LineNumberComponent;
+
+
+
+
+
+//import lineNumber.LineNumberComponent;
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
 import net.miginfocom.swing.MigLayout;
@@ -72,13 +81,14 @@ public class GUI {
 	private JTextPane JTextPane_function;
 	//private JTextArea JTextArea_function;
 	private JTable JTable_result;
+	private JTextArea JTextArea_trace;
 	private JTextArea JTextArea_cin;
 	private JTextArea JTextArea_cout;
 	private String file_name = "function";
 	private File path, path_clang;
 	private UndoManager undoManager = new UndoManager();
 	
-	private LineNumberComponent lineNumberComponent;
+	//private LineNumberComponent lineNumberComponent;
 	//private LineNumberModelImpl lineNumberModel;
 
 	JButton but_redo, but_undo;
@@ -86,6 +96,7 @@ public class GUI {
 	
 	String [] text_function;
 	String [] text_styles;
+	int[] text_length;
 	
 	ArrayList<ArrayList<ArrayList<ArrayList<String>>>> infoFunction;
 	
@@ -96,8 +107,12 @@ public class GUI {
 	private  JTree    JTree_XML;
 	private static    JFrame   JFrame_XML;
 
-	public static final int FRAME_WIDTH = 440;
-	public static final int FRAME_HEIGHT = 280;
+	private static final int FRAME_WIDTH = 440;
+	private static final int FRAME_HEIGHT = 280;
+	
+	private Style traceStyle;
+	private Style textStyle;
+	private DefaultStyledDocument doc;
 	
 	private GUI() {
 		initialize();
@@ -373,7 +388,7 @@ public class GUI {
 		frmGrupo.setTitle("Ejecucion simbolica");
 		frmGrupo.setBounds(100, 100, 900, 500);
 		frmGrupo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmGrupo.getContentPane().setLayout(new MigLayout("", "[80.00,grow][680.00,grow][50.00,grow][250.00,grow][80.00,grow][]", "[20.00,grow][210.00,grow][20.00,grow][150.00,grow][20.00,grow][150.00,grow][20.00,grow][grow 600]"));
+		frmGrupo.getContentPane().setLayout(new MigLayout("", "[80.00,grow][680.00,grow][50.00,grow][250.00,grow][80.00,grow][]", "[20.00,grow][210.00,grow][10.00,grow][150.00,grow][1.00,grow][150.00,grow][1.00,grow][150.00,grow][1.00,grow][grow 600]"));
 		
 		frmGrupo.setJMenuBar(getMenuBar());        
         
@@ -381,67 +396,69 @@ public class GUI {
 		
 		
 		//Text Area for function
-		
+        
 		JPanel JPanel_function = new JPanel();
-		frmGrupo.getContentPane().add(JPanel_function, "cell 1 1 1 5,grow");
+		frmGrupo.getContentPane().add(JPanel_function, "cell 1 1 1 7,grow");
 		JPanel_function.setLayout(new MigLayout("", "[grow]", "[16.00][grow]"));
 		
 		JLabel JLabel_function = new JLabel("C\u00F3digo de la funci\u00F3n:");
 		JLabel_function.setHorizontalAlignment(SwingConstants.CENTER);
 		JLabel_function.setFont(new Font("Tahoma", Font.BOLD, 12));
-		JPanel_function.add(JLabel_function, "cell 0 0");
+		JPanel_function.add(JLabel_function, "cell 0 0");		    
 		
-		/*
-		JScrollPane JScrollPane_function = new JScrollPane(JTextArea_function);
-		JPanel_function.add(JScrollPane_function, "cell 0 1,grow");
-		
-		//TextLineNumber tln = new TextLineNumber(JTextArea_function);
-		JTextArea_function = new JTextArea();
-		//lineNumberComponent.setAlignment(LineNumberComponent.CENTER_ALIGNMENT);
-		JTextArea_function.setEditable(true);
-			JTextArea_function.getDocument().addUndoableEditListener(
+
+        StyleContext sc = new StyleContext();
+        doc = new DefaultStyledDocument(sc);
+		JTextPane_function = new JTextPane(doc);
+		JTextPane_function.getDocument().addUndoableEditListener(
 		        new UndoableEditListener() {
 		          public void undoableEditHappened(UndoableEditEvent e) {
 		            undoManager.addEdit(e.getEdit());
 		            updateUndoRedo();
 		          }
 		    });
-			/*JTextArea_function.getDocument().addDocumentListener(new DocumentListener(){
-				public void changedUpdate(DocumentEvent arg0) {
-					lineNumberComponent.adjustWidth();
-				}
-				public void insertUpdate(DocumentEvent arg0) {
-					lineNumberComponent.adjustWidth();
-				}
-				public void removeUpdate(DocumentEvent arg0) {
-					lineNumberComponent.adjustWidth();
-				}
-			});
-			
-			JTextArea_function.setText("This is a demonstration of...\n...line numbering using a JText area within...\n...a JScrollPane");
-*/
-		    
 		
-		JTextPane_function = new JTextPane();
+		traceStyle = sc.addStyle("Trace", null);
+		traceStyle.addAttribute(StyleConstants.Foreground, Color.red);
+		traceStyle.addAttribute(StyleConstants.FontSize, new Integer(15));
+		traceStyle.addAttribute(StyleConstants.FontFamily, "serif");
+		traceStyle.addAttribute(StyleConstants.Bold, new Boolean(true));
 		
-		JScrollPane JScrollPane_function = new JScrollPane(JTextPane_function);
-		//lineNumberModel = new LineNumberModelImpl();
-		//lineNumberComponent = new LineNumberComponent(lineNumberModel);
+		textStyle = sc.addStyle("Text", null);
+		textStyle.addAttribute(StyleConstants.Foreground, Color.black);
+		textStyle.addAttribute(StyleConstants.FontSize, new Integer(13));
+		textStyle.addAttribute(StyleConstants.FontFamily, "serif");
 
-		JScrollPane_function.setRowHeaderView(lineNumberComponent);
-		
-		//TextLineNumber tln = new TextLineNumber(JTextPane_function);
+
+		JScrollPane JScrollPane_function = new JScrollPane(JTextPane_function);
 		
 		JScrollPane_function.setViewportView(JTextPane_function);
 		
 		JPanel_function.add(JScrollPane_function, "cell 0 1,grow");
 		
-		//JScrollPane_function.setRowHeaderView(tln);
+		// Text Area for print trace
+		
+		JPanel JPanel_trace = new JPanel();
+		frmGrupo.getContentPane().add(JPanel_trace, "cell 3 3,grow");
+		JPanel_trace.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
+		
+		JLabel JLabel_trace = new JLabel("Traza ejecucion:");
+		JLabel_trace.setHorizontalAlignment(SwingConstants.CENTER);
+		JLabel_trace.setFont(new Font("Tahoma", Font.BOLD, 12));
+		JPanel_trace.add(JLabel_trace, "cell 0 0");
+		
+		JScrollPane JScrollPane_trace = new JScrollPane();
+		JPanel_trace.add(JScrollPane_trace, "cell 0 1, grow");
+		
+		JTextArea_trace = new JTextArea();
+		JTextArea_trace.setEditable(false);
+		JScrollPane_trace.setViewportView(JTextArea_trace);
+		
 		
 		// Text Area for Cin
 		
 		JPanel JPanel_cin = new JPanel();
-		frmGrupo.getContentPane().add(JPanel_cin, "cell 3 3,grow");
+		frmGrupo.getContentPane().add(JPanel_cin, "cell 3 5,grow");
 		JPanel_cin.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
 		JLabel JLabel_cin = new JLabel("Consola entrada:");
@@ -459,7 +476,7 @@ public class GUI {
 		// Text Area for Cout
 		
 		JPanel JPanel_cout = new JPanel();
-		frmGrupo.getContentPane().add(JPanel_cout, "cell 3 5,grow");
+		frmGrupo.getContentPane().add(JPanel_cout, "cell 3 7,grow");
 		JPanel_cout.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
 		JLabel JLabel_cout = new JLabel("Consola salida:");
@@ -505,7 +522,10 @@ public class GUI {
 		
 		String[] columnNames = {"","Variable name","Value"};
 		Object[][] data = {};
-		JTable_result = new JTable(new DefaultTableModel(data,columnNames){public boolean isCellEditable(int row, int column) { return false;}});
+		JTable_result = new JTable(new DefaultTableModel(data,columnNames){
+			public boolean isCellEditable(int row, int column) { return false;}
+			public Class getColumnClass(int columnIndex) {return String.class; }
+		});
 		JTable_result.setDefaultRenderer(String.class, new MultiLineCellRenderer());
 		JTable_result.addMouseListener(new MouseAdapter() {
 			  public void mouseClicked(MouseEvent e) {
@@ -628,13 +648,22 @@ public class GUI {
 	public void printFile (JTextPane jtextpane){
         try {  
         	jtextpane.setText("");
+        	LineNumberReader  lnr = new LineNumberReader(new FileReader(path));
+        	lnr.skip(Long.MAX_VALUE);
+        	        	
         	FileReader lector = new FileReader(path);
             BufferedReader buffer = new BufferedReader(lector);
             String linea = "";
             StyledDocument doc = jtextpane.getStyledDocument();
-            
+            int count = 0;
+            text_length = new int[lnr.getLineNumber()];
             while((linea = buffer.readLine()) != null){            	
             	doc.insertString(doc.getLength(), linea + "\n", null);
+            	if (count == 0)
+            		text_length[count] = linea.length();
+            	else
+            		text_length[count] = text_length[count-1]+linea.length();
+            	count++;
             }
             buffer.close();
             lector.close();
@@ -655,6 +684,13 @@ public class GUI {
 			pw = new FileWriter ("./files/"+file_name+".cc");
 			pw.write(JTextPane_function.getText());
 			text_function = JTextPane_function.getText().split("\n");
+			int nlines = text_function.length;
+			text_length = new int [nlines];
+			int count = 0;
+			for (int i=0; i<text_function.length; i++){
+				text_length[i] = count;
+				count += text_function[i].length();
+			}
 			//JTextArea_function.write(pw); //Object of JTextArea
 	        pw.close();
 		} catch (IOException e) {
@@ -676,13 +712,8 @@ public class GUI {
             ArrayList<String> cin = new ArrayList<String>();
             ArrayList<String> cout = new ArrayList<String>();
             
-            int count = 0;
-            
             while((line = buffer.readLine()) != null){
-            	if (line.contains("<caso>")){
-            		count ++;
-            	}
-            	else if (line.contains("</caso>")){
+            	if (line.contains("</caso>")){
             		result.add((ArrayList<ArrayList<ArrayList<String>>>) current.clone());
             		current.clear();
             	}
@@ -761,6 +792,10 @@ public class GUI {
 		ArrayList<ArrayList<String>> data_aux = infoFunction.get(i).get(1);
 		JTextArea_cin.setText("");
 		JTextArea_cout.setText("");
+		JTextArea_trace.setText("");
+		doc.setParagraphAttributes(0, JTextPane_function.getDocument().getLength(), textStyle, true);
+		//StyleContext sc = new StyleContext();
+		//JTextPane_function.setStyledDocument(new DefaultStyledDocument(sc));
 		//Show cin
 		if(data_aux.get(1).size() > 0){
 			Iterator<String> it1 = data_aux.get(1).iterator();
@@ -777,7 +812,12 @@ public class GUI {
 		}
 		//Color trace
 		if(data_aux.get(0).size() > 0){
-			
+			Iterator<String> it2 = data_aux.get(0).iterator();
+			while (it2.hasNext()){
+				int aux = Integer.parseInt(it2.next());
+				JTextArea_trace.append(aux + "  ");
+				doc.setParagraphAttributes(text_length[aux], 1, traceStyle, true);
+			}
 		}
 	}
 	
@@ -859,10 +899,8 @@ public class GUI {
 			while(it1.hasNext()){
 				lines ++;
 				ArrayList<String> aux1 = it1.next();
-				current_case[1] += aux1.get(0);
-				current_case[1] += " \n ";
-				current_case[2] += aux1.get(1);
-				current_case[2] += " \n ";
+				current_case[1] += aux1.get(0) + "\n";
+				current_case[2] += aux1.get(1) + "\n";
 			}
 			model.addRow(current_case);
 			JTable_result.setRowHeight(count,JTable_result.getRowHeight(count)*lines);
@@ -959,24 +997,5 @@ public class GUI {
 	      e.printStackTrace();
 	    }
 	}
-	
-	/*
-	private class LineNumberModelImpl implements LineNumberModel{
-		public int getNumberLines() {
-			return JTextArea_function.getLineCount();
-		}
-		public Rectangle getLineRect(int line) {
-			try{
-				return JTextArea_function.modelToView(JTextArea_function.getLineStartOffset(line));
-			}catch(BadLocationException e){
-				e.printStackTrace();
-				return new Rectangle();
-
-			}
-
-		}
-
-	}
-	*/
 	
 }
