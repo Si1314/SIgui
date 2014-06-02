@@ -14,13 +14,17 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
+import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -268,7 +272,7 @@ public class GUI {
 		menu_XMLprolog.setEnabled(false);
 		menu_XMLprolog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
+				editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
 				showXML("./files/"+file_name+"PL.xml");
 			}
 		});
@@ -1005,9 +1009,11 @@ public class GUI {
 			System.out.println(status);
 			System.out.println("working directory = "+System.getProperty("user.dir"));
 			if (status == 0){
-				ProcessBuilder prolog = new ProcessBuilder("./tools/runInterpreter.sh","\"interpreter('"+workingDirectory+"/files/"+file_name+"XML.xml','"+workingDirectory+"/files/"+file_name+"PL.xml',"+min_int+","+max_int+","+loops_length+",'"+name_function+"')\"");
-				System.out.println(prolog.command());
-				Process p2 = prolog.start();
+				ProcessBuilder pl = new ProcessBuilder("./tools/runInterpreter.sh","interpreter('"+workingDirectory+"/files/"+file_name+"XML.xml','"+workingDirectory+"/files/"+file_name+"PL.xml',"+min_int+","+max_int+","+loops_length+",'"+name_function+"')");
+				pl.redirectOutput(Redirect.INHERIT);
+				System.out.println(pl.command());
+				Process p2 = pl.start();
+				
 				//Read XML file
 				//BufferedReader reader = new BufferedReader(new InputStreamReader(p2.getInputStream()));
 				//String line = reader.readLine();
@@ -1015,7 +1021,7 @@ public class GUI {
 				int status2 = p2.waitFor();
 				System.out.println(status2);
 				
-				//showSolution();
+				showSolution();
 				menu_XMLclang.setEnabled(true);
 				menu_XMLprolog.setEnabled(true);
 			}
