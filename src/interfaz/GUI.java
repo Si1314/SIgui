@@ -264,7 +264,7 @@ public class GUI {
 		menu_XMLclang.setEnabled(false);
 		menu_XMLclang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
+				//editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
 				showXML("./files/"+file_name+"XML.xml");
 			}
 		});
@@ -272,7 +272,7 @@ public class GUI {
 		menu_XMLprolog.setEnabled(false);
 		menu_XMLprolog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
+				//editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
 				showXML("./files/"+file_name+"PL.xml");
 			}
 		});
@@ -659,14 +659,15 @@ public class GUI {
             String linea = "";
             StyledDocument docu = jtextpane.getStyledDocument();
             int count = 0;
+            int aux = 0;
             text_length = new int[lnr.getLineNumber()+1];
             while((linea = buffer.readLine()) != null){            	
             	docu.insertString(doc.getLength(), linea + "\n", null);
-     
+            	
             	if (count == 0)
-            		text_length[count] = linea.length();
+            		text_length[count] = aux;
             	else
-            		text_length[count] = text_length[count-1]+linea.length();
+            		text_length[count] = text_length[count-1]+aux;
             	count++;
             }
             doc.setParagraphAttributes(0, JTextPane_function.getDocument().getLength(), textStyle, true);
@@ -844,7 +845,7 @@ public class GUI {
 			Iterator<String> it2 = data_aux.get(0).iterator();
 			while (it2.hasNext()){
 				int aux = Integer.parseInt(it2.next());
-				JTextArea_trace.append(aux + "  ");
+				JTextArea_trace.append(aux + "(" + text_length[aux] + ")" + "  ");
 				doc.setParagraphAttributes(text_length[aux], 1, traceStyle, true);
 			}
 		}
@@ -932,6 +933,9 @@ public class GUI {
 		infoFunction = parserXML();
 		DefaultTableModel model = (DefaultTableModel) JTable_result.getModel();
 	    model.setRowCount(0);
+	    JTextArea_cin.setText("");
+	    JTextArea_cout.setText("");
+	    JTextArea_trace.setText("");
 		Iterator<ArrayList<ArrayList<ArrayList<String>>>> it0 = infoFunction.iterator();
 		int count = 0;
 		int lines = 0;
@@ -955,44 +959,6 @@ public class GUI {
 			
 			count++;
 		}
-		
-		/*
-		try {  
-        	jtextarea.setText("");
-        	FileReader lector = new FileReader("./files/"+file+"PL.xml");
-            BufferedReader buffer = new BufferedReader(lector);
-            String line = "";
-            boolean first = true;
-            
-            while((line = buffer.readLine()) != null){
-            	if (line.equals("<table/>"))
-            		if(first)
-            			first = false;
-            		else
-            			jtextarea.append("\n");
-            	else{
-            		StringTokenizer aux = new StringTokenizer(line, " ");
-            		String word = "";
-            		while (aux.hasMoreTokens()){
-            			word = aux.nextToken();
-                		if (word.contains("name")){
-                			jtextarea.append(word.substring(word.indexOf("\"")+1, word.lastIndexOf("\"")));
-                			jtextarea.append(": ");
-                		}
-                		else if (word.contains("value")){
-                			jtextarea.append(word.substring(word.indexOf("\"")+1, word.lastIndexOf("\"")));
-                			jtextarea.append("\t");
-                		}
-            		}
-            	}
-            }
-            buffer.close();
-            lector.close();
-        }
-        catch(Exception e){     
-        	e.printStackTrace();
-        }
-        */
 	}
 	
 	
@@ -1024,6 +990,8 @@ public class GUI {
 				showSolution();
 				menu_XMLclang.setEnabled(true);
 				menu_XMLprolog.setEnabled(true);
+				editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
+				editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
 			}
 			
 			//execute Clang with files(nameFile.cc)
