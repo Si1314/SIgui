@@ -70,6 +70,7 @@ import org.w3c.dom.Node;
 
 
 
+
 //import lineNumber.LineNumberComponent;
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
@@ -239,7 +240,7 @@ public class GUI {
 		JMenuItem menu_ChangeParams = new JMenuItem("Change Params to run");
 		menu_ChangeParams.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showInfoRun();
+				showInfoRun(true);
 			}
 		});
 		JMenuItem menu_WatchClang = new JMenuItem("Watch Clang directory");
@@ -315,8 +316,8 @@ public class GUI {
         JButton but_play = new JButton(icon_play);
 	        but_play.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					showInfoRun();
-					executeSE();
+					showInfoRun(false);
+					//executeSE();
 				}
 			});
         JButton but_print = new JButton(icon_print);
@@ -788,7 +789,7 @@ public class GUI {
 		return result;
 	}
 	
-	public void showInfoRun()
+	public void showInfoRun(boolean menu)
 	{
 		JTextField nameFunction = new JTextField(name_function);
 		JTextField maxInt = new JTextField(Integer.toString(max_int));
@@ -806,6 +807,8 @@ public class GUI {
 			max_int = Integer.parseInt(maxInt.getText());
 			min_int = Integer.parseInt(minInt.getText());
 			loops_length = Integer.parseInt(loops.getText());
+			if (!menu)
+				executeSE();
 		}
 		
 	}
@@ -988,10 +991,11 @@ public class GUI {
         */
 	}
 	
+	
 	public void executeSE(){
 		saveTextEditor();
-		
 		try {
+			
 			String workingDirectory = System.getProperty("user.dir");
 			ProcessBuilder builder = new ProcessBuilder("./tools/runPFCTool.sh",path_clang.toString(),workingDirectory+"/files/"+file_name+".cc",workingDirectory+"/files/"+file_name+"XML.xml");//,function-name);
 			System.out.println(builder.command());
