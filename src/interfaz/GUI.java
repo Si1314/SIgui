@@ -20,6 +20,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -68,6 +69,7 @@ import org.w3c.dom.Node;
 
 
 
+
 //import lineNumber.LineNumberComponent;
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
@@ -94,7 +96,7 @@ public class GUI {
 	//private LineNumberModelImpl lineNumberModel;
 
 	JButton but_redo, but_undo;
-	JMenuItem menu_redo, menu_undo;
+	JMenuItem menu_redo, menu_undo, menu_XMLclang, menu_XMLprolog;
 	
 	String [] text_function;
 	String [] text_styles;
@@ -253,16 +255,19 @@ public class GUI {
 				openFileClang();
 			}
 		});
-		JMenuItem menu_XMLclang = new JMenuItem("See XML from Clang");
+		menu_XMLclang = new JMenuItem("See XML from Clang");
+		menu_XMLclang.setEnabled(false);
 		menu_XMLclang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
 				showXML("./files/"+file_name+"XML.xml");
 			}
 		});
-		JMenuItem menu_XMLprolog = new JMenuItem("See XML from Prolog");
+		menu_XMLprolog = new JMenuItem("See XML from Prolog");
+		menu_XMLprolog.setEnabled(false);
 		menu_XMLprolog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
 				showXML("./files/"+file_name+"PL.xml");
 			}
 		});
@@ -838,6 +843,25 @@ public class GUI {
 		}
 	}
 	
+	public void editXML (String filename,String first, String end){ 
+	    end = "\n"+end;
+	    first = first+"\n";
+	    byte data1[] = first.getBytes();
+	    byte data2[] = end.getBytes();
+	    try {                           
+	    	RandomAccessFile file = new RandomAccessFile(filename, "rws");
+	        byte[] text = new byte[(int) file.length()];
+	        file.readFully(text);
+	        file.seek(0);
+	        file.write(data1);
+	        file.write(text);
+	        file.write(data2);
+	        file.close();
+	    } catch (IOException e) {       
+	            e.printStackTrace();
+	    }
+	}
+	
 	public void showXML (String filename){
 		Document doc = null;
 		
@@ -988,13 +1012,14 @@ public class GUI {
 				System.out.println(status2);
 				
 				//showSolution();
+				menu_XMLclang.setEnabled(true);
+				menu_XMLprolog.setEnabled(true);
 			}
 			
 			//execute Clang with files(nameFile.cc)
 			//execute Prolog with (nameFileXML.xml)
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
