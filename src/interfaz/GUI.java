@@ -955,21 +955,18 @@ public class GUI {
 	
 	public void executeSE(){
 		saveTextEditor();
-		showSolution();
-		/*
-		saveTextEditor(JTextArea_function);
-		//TODO
+		
 		try {
 			String workingDirectory = System.getProperty("user.dir");
-			ProcessBuilder builder = new ProcessBuilder("./files/runPFCTool.sh",workingDirectory+"/files/"+file+".cc",workingDirectory+"/files/"+file+"XML.xml");
+			ProcessBuilder builder = new ProcessBuilder("./files/runPFCTool.sh",path_clang.toString(),workingDirectory+"/files/"+file_name+".cc",workingDirectory+"/files/"+file_name+"XML.xml");//,function-name);
 			System.out.println(builder.command());
-			Process p = builder.start();
+			/*Process p = builder.start();
 			
 			int status = p.waitFor();
 			System.out.println(status);
 			System.out.println("working directory = "+System.getProperty("user.dir"));
 			if (status == 0){
-				ProcessBuilder prolog = new ProcessBuilder("./files/runInterpreter.sh","\"interpreter('./files/"+file+"XML.xml','./files/"+file+"PL.xml').\"");
+				ProcessBuilder prolog = new ProcessBuilder("./files/runInterpreter.sh","\"interpreter('./files/"+file_name+"XML.xml','./files/"+file_name+"PL.xml').\"");
 				System.out.println(prolog.command());
 				Process p2 = prolog.start();
 				//Read XML file
@@ -978,8 +975,10 @@ public class GUI {
 				System.out.println(line);
 				int status2 = p2.waitFor();
 				System.out.println(status2);
-				showSolution(JTextArea_result);
-			}
+				*/
+				showSolution();
+			//}
+			
 			//execute Clang with files(nameFile.cc)
 			//execute Prolog with (nameFileXML.xml)
 			
@@ -987,7 +986,7 @@ public class GUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
+		
 		
 	}
 	
