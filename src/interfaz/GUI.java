@@ -696,7 +696,7 @@ public class GUI {
 	public ArrayList<ArrayList<ArrayList<ArrayList<String>>>> parserXML(){
 		ArrayList<ArrayList<ArrayList<ArrayList<String>>>> result = new ArrayList<ArrayList<ArrayList<ArrayList<String>>>>();
 		try{
-			FileReader lector = new FileReader("./files/"+"example"+".xml");
+			FileReader lector = new FileReader("./files/"+file_name+"PL.xml");
 			BufferedReader buffer = new BufferedReader(lector);
             String line = "";
             ArrayList<ArrayList<ArrayList<String>>> current = new ArrayList<ArrayList<ArrayList<String>>>(2);
@@ -977,7 +977,7 @@ public class GUI {
 			System.out.println(status);
 			System.out.println("working directory = "+System.getProperty("user.dir"));
 			if (status == 0){
-				ProcessBuilder prolog = new ProcessBuilder("./tools/runInterpreter.sh","\"interpreter('./files/"+file_name+"XML.xml','./files/"+file_name+"PL.xml','"+name_function+"').\"");
+				ProcessBuilder prolog = new ProcessBuilder("./tools/runInterpreter.sh","\"interpreter('"+workingDirectory+"/files/"+file_name+"XML.xml','"+workingDirectory+"/files/"+file_name+"PL.xml',"+min_int+","+max_int+","+loops_length+",'"+name_function+"')\"");
 				System.out.println(prolog.command());
 				Process p2 = prolog.start();
 				//Read XML file
@@ -987,7 +987,7 @@ public class GUI {
 				int status2 = p2.waitFor();
 				System.out.println(status2);
 				
-				showSolution();
+				//showSolution();
 			}
 			
 			//execute Clang with files(nameFile.cc)
