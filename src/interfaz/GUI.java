@@ -661,7 +661,7 @@ public class GUI {
             String linea = "";
             StyledDocument docu = jtextpane.getStyledDocument();
             int count = 0;
-            text_length = new int[lnr.getLineNumber()];
+            text_length = new int[lnr.getLineNumber()+1];
             while((linea = buffer.readLine()) != null){            	
             	docu.insertString(doc.getLength(), linea + "\n", null);
             	if (count == 0)
