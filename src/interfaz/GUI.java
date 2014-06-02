@@ -102,6 +102,7 @@ public class GUI {
 	
 	ArrayList<ArrayList<ArrayList<ArrayList<String>>>> infoFunction;
 	
+	String name_function = "";
 	int max_int = 20;
 	int min_int = -5;
 	int loops_length = 10;
@@ -236,21 +237,7 @@ public class GUI {
 		JMenuItem menu_ChangeParams = new JMenuItem("Change Params to run");
 		menu_ChangeParams.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JTextField maxInt = new JTextField(Integer.toString(max_int));
-				JTextField minInt = new JTextField(Integer.toString(min_int));
-				JTextField loops = new JTextField(Integer.toString(loops_length));
-				Object[] options = {
-				    "Max Int:", maxInt,
-				    "Min Int:", minInt,
-				    "Length Loop:", loops
-				};
-				int option = JOptionPane.showConfirmDialog(null, options, "Config params to run", JOptionPane.OK_CANCEL_OPTION);
-				if (option == JOptionPane.OK_OPTION){
-					max_int = Integer.parseInt(maxInt.getText());
-					min_int = Integer.parseInt(minInt.getText());
-					loops_length = Integer.parseInt(loops.getText());
-				}
-				
+				showInfoRun();
 			}
 		});
 		JMenuItem menu_WatchClang = new JMenuItem("Watch Clang directory");
@@ -323,6 +310,7 @@ public class GUI {
         JButton but_play = new JButton(icon_play);
 	        but_play.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					showInfoRun();
 					executeSE();
 				}
 			});
@@ -664,6 +652,7 @@ public class GUI {
             text_length = new int[lnr.getLineNumber()+1];
             while((linea = buffer.readLine()) != null){            	
             	docu.insertString(doc.getLength(), linea + "\n", null);
+     
             	if (count == 0)
             		text_length[count] = linea.length();
             	else
@@ -792,6 +781,28 @@ public class GUI {
 		}
 		infoFunction = result;
 		return result;
+	}
+	
+	public void showInfoRun()
+	{
+		JTextField nameFunction = new JTextField(name_function);
+		JTextField maxInt = new JTextField(Integer.toString(max_int));
+		JTextField minInt = new JTextField(Integer.toString(min_int));
+		JTextField loops = new JTextField(Integer.toString(loops_length));
+		Object[] options = {
+			"Name Function:", nameFunction,
+		    "Max Int:", maxInt,
+		    "Min Int:", minInt,
+		    "Length Loop:", loops
+		};
+		int option = JOptionPane.showConfirmDialog(null, options, "Config params to run", JOptionPane.OK_CANCEL_OPTION);
+		if (option == JOptionPane.OK_OPTION){
+			name_function = nameFunction.getText();
+			max_int = Integer.parseInt(maxInt.getText());
+			min_int = Integer.parseInt(minInt.getText());
+			loops_length = Integer.parseInt(loops.getText());
+		}
+		
 	}
 	
 	public void showInfo(int i){
