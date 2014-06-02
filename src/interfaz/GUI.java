@@ -969,26 +969,26 @@ public class GUI {
 		
 		try {
 			String workingDirectory = System.getProperty("user.dir");
-			ProcessBuilder builder = new ProcessBuilder("./files/runPFCTool.sh",path_clang.toString(),workingDirectory+"/files/"+file_name+".cc",workingDirectory+"/files/"+file_name+"XML.xml");//,function-name);
+			ProcessBuilder builder = new ProcessBuilder("./tools/runPFCTool.sh",path_clang.toString(),workingDirectory+"/files/"+file_name+".cc",workingDirectory+"/files/"+file_name+"XML.xml");//,function-name);
 			System.out.println(builder.command());
-			/*Process p = builder.start();
+			Process p = builder.start();
 			
 			int status = p.waitFor();
 			System.out.println(status);
 			System.out.println("working directory = "+System.getProperty("user.dir"));
 			if (status == 0){
-				ProcessBuilder prolog = new ProcessBuilder("./files/runInterpreter.sh","\"interpreter('./files/"+file_name+"XML.xml','./files/"+file_name+"PL.xml').\"");
+				ProcessBuilder prolog = new ProcessBuilder("./tools/runInterpreter.sh","\"interpreter('./files/"+file_name+"XML.xml','./files/"+file_name+"PL.xml','"+name_function+"').\"");
 				System.out.println(prolog.command());
 				Process p2 = prolog.start();
 				//Read XML file
-				BufferedReader reader = new BufferedReader(new InputStreamReader(p2.getInputStream()));
-				String line = reader.readLine();
-				System.out.println(line);
+				//BufferedReader reader = new BufferedReader(new InputStreamReader(p2.getInputStream()));
+				//String line = reader.readLine();
+				//System.out.println(line);
 				int status2 = p2.waitFor();
 				System.out.println(status2);
-				*/
+				
 				showSolution();
-			//}
+			}
 			
 			//execute Clang with files(nameFile.cc)
 			//execute Prolog with (nameFileXML.xml)
