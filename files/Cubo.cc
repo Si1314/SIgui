@@ -87,7 +87,7 @@ void Cubo::construye()
         for(int i=0; i<this->numeroCaras;i++)
         {
             PV3D* normal=this->CalculoVectorNormalPorNewell(caras[i]);
-            normales[i]= normal;
+            normales[i]= normal; 
         }
 
 }

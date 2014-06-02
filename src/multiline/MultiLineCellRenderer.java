@@ -1,11 +1,13 @@
 package multiline;
 import java.awt.Component;
+import java.awt.Font;
 
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.text.StyleConstants;
 
 
 public class MultiLineCellRenderer extends JTextArea implements TableCellRenderer {

@@ -422,14 +422,14 @@ public class GUI {
 		
 		traceStyle = sc.addStyle("Trace", null);
 		traceStyle.addAttribute(StyleConstants.Foreground, Color.red);
-		traceStyle.addAttribute(StyleConstants.FontSize, new Integer(15));
-		traceStyle.addAttribute(StyleConstants.FontFamily, "serif");
+		traceStyle.addAttribute(Font.PLAIN, new Integer(12));
+		//traceStyle.addAttribute(StyleConstants.FontFamily, "serif");
 		traceStyle.addAttribute(StyleConstants.Bold, new Boolean(true));
 		
 		textStyle = sc.addStyle("Text", null);
 		textStyle.addAttribute(StyleConstants.Foreground, Color.black);
-		textStyle.addAttribute(StyleConstants.FontSize, new Integer(13));
-		textStyle.addAttribute(StyleConstants.FontFamily, "serif");
+		textStyle.addAttribute(Font.PLAIN, new Integer(12));
+		//textStyle.addAttribute(StyleConstants.FontFamily, "serif");
 
 
 		JScrollPane JScrollPane_function = new JScrollPane(JTextPane_function);
@@ -659,17 +659,18 @@ public class GUI {
         	FileReader lector = new FileReader(path);
             BufferedReader buffer = new BufferedReader(lector);
             String linea = "";
-            StyledDocument doc = jtextpane.getStyledDocument();
+            StyledDocument docu = jtextpane.getStyledDocument();
             int count = 0;
             text_length = new int[lnr.getLineNumber()];
             while((linea = buffer.readLine()) != null){            	
-            	doc.insertString(doc.getLength(), linea + "\n", null);
+            	docu.insertString(doc.getLength(), linea + "\n", null);
             	if (count == 0)
             		text_length[count] = linea.length();
             	else
             		text_length[count] = text_length[count-1]+linea.length();
             	count++;
             }
+            doc.setParagraphAttributes(0, JTextPane_function.getDocument().getLength(), textStyle, true);
             buffer.close();
             lector.close();
         }
