@@ -14,15 +14,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
@@ -663,7 +660,6 @@ public class GUI {
             text_length = new int[lnr.getLineNumber()+1];
             while((linea = buffer.readLine()) != null){            	
             	docu.insertString(doc.getLength(), linea + "\n", null);
-            	
             	if (count == 0)
             		text_length[count] = aux;
             	else
@@ -813,7 +809,7 @@ public class GUI {
 			min_int = Integer.parseInt(minInt.getText());
 			loops_length = Integer.parseInt(loops.getText());
 			if (!menu)
-				executeSE();
+				executeProlog();
 		}
 		
 	}
@@ -961,9 +957,52 @@ public class GUI {
 		}
 	}
 	
+	public int executeClang(){
+		try {
+			
+			String workingDirectory = System.getProperty("user.dir");
+			ProcessBuilder builder = new ProcessBuilder("./tools/runPFCTool.sh",path_clang.toString(),workingDirectory+"/files/"+file_name+".cc",workingDirectory+"/files/"+file_name+"XML.xml");//,function-name);
+			System.out.println(builder.command());
+			Process p = builder.start();
+			
+			int status = p.waitFor();
+			System.out.println(status);
+			System.out.println("working directory = "+System.getProperty("user.dir"));
+			return status;
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		
+		
+	}
+	
+	public void executeProlog(){
+		try {
+			String workingDirectory = System.getProperty("user.dir");
+			ProcessBuilder pl = new ProcessBuilder("./tools/runInterpreter.sh","interpreter('"+workingDirectory+"/files/"+file_name+"XML.xml','"+workingDirectory+"/files/"+file_name+"PL.xml',"+min_int+","+max_int+","+loops_length+",'"+name_function+"')");
+			pl.redirectOutput(Redirect.INHERIT);
+			System.out.println(pl.command());
+			Process p2 = pl.start();
+			int status2 = p2.waitFor();
+			System.out.println(status2);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public void executeSE(){
 		saveTextEditor();
+		int status = executeClang();
+		showInfoRun(false);
+		showSolution();
+		menu_XMLclang.setEnabled(true);
+		menu_XMLprolog.setEnabled(true);
+		editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
+		editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
+		/*
 		try {
 			
 			String workingDirectory = System.getProperty("user.dir");
@@ -1000,7 +1039,7 @@ public class GUI {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		*/
 		
 	}
 	
