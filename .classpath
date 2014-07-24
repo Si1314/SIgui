@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="libs/synthetica.jar"/>
 	<classpathentry kind="lib" path="libs/syntheticaAluOxide.jar"/>
 	<classpathentry kind="lib" path="libs/syntheticaClassy.jar"/>
+	<classpathentry kind="lib" path="libs/xmleditorkit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

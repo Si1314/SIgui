@@ -1,0 +1,16 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+<button>
+<item_default_bgcolor>000000</item_default_bgcolor>
+<item_default_text_color>FFFFFF</item_default_text_color>
+<item_mousover_text_color>F47B33</item_mousover_text_color>
+<item_mousover_bgcolor>FFFFFF</item_mousover_bgcolor>
+<item_default_bullet_color>ffffff</item_default_bullet_color>
+<item_mousover_bullet_color>F47B33</item_mousover_bullet_color>
+<item_font>default</item_font>
+<item_font_size>16</item_font_size>
+<item_letter_spaceing>0.2</item_letter_spaceing>
+<item_bold>yes</item_bold>
+<item_x>19</item_x>
+<item_y>2</item_y>
+<item_play_sound>yes</item_play_sound>
+</button>

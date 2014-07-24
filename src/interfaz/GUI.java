@@ -15,6 +15,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -72,19 +73,25 @@ import org.w3c.dom.Node;
 
 
 
+
+
+
+
+import renders.LineNumbers;
+import renders.MultiLineCellRenderer;
 //import lineNumber.LineNumberComponent;
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
 import net.miginfocom.swing.MigLayout;
 import xmlViewer.XML2JTree;
-import lineNumbers.LineNumbers;
-import multiline.MultiLineCellRenderer;
+import xmleditorkit.XMLEditorKit;
 
 
 public class GUI {
 
 	private JFrame frmGrupo;
 	private JTextPane JTextPane_function;
+	private JTextPane JTextPane_xml;
 	//private JTextArea JTextArea_function;
 	private JTable JTable_result;
 	private JTextArea JTextArea_trace;
@@ -93,9 +100,6 @@ public class GUI {
 	private String file_name = "function";
 	private File path, path_clang;
 	private UndoManager undoManager = new UndoManager();
-	
-	//private LineNumberComponent lineNumberComponent;
-	//private LineNumberModelImpl lineNumberModel;
 
 	JButton but_redo, but_undo;
 	JMenuItem menu_redo, menu_undo, menu_XMLclang, menu_XMLprolog;
@@ -156,8 +160,12 @@ public class GUI {
 				}
 			});
 		JMenuItem menu_save = new JMenuItem("Save");
-			menu_save.setEnabled(false);
 			menu_save.setIcon(new ImageIcon("./img/Save-12.png"));
+			menu_save.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					saveTextEditor();
+				}
+			});
 		JMenuItem menu_close = new JMenuItem("Close");
 			menu_close.setEnabled(false);
 		JMenuItem menu_closeall = new JMenuItem("Close all");
@@ -258,7 +266,7 @@ public class GUI {
 			}
 		});
 		menu_XMLclang = new JMenuItem("See XML from Clang");
-		menu_XMLclang.setEnabled(false);
+		//menu_XMLclang.setEnabled(false);
 		menu_XMLclang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
@@ -266,7 +274,7 @@ public class GUI {
 			}
 		});
 		menu_XMLprolog = new JMenuItem("See XML from Prolog");
-		menu_XMLprolog.setEnabled(false);
+		//menu_XMLprolog.setEnabled(false);
 		menu_XMLprolog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
@@ -324,7 +332,11 @@ public class GUI {
         JButton but_print = new JButton(icon_print);
         but_print.setEnabled(false);
         JButton but_save = new JButton(icon_save);
-        but_save.setEnabled(false);
+        but_save.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveTextEditor();
+			}
+		});
         but_undo = new JButton(icon_undo);
         	but_undo.setEnabled(false);
         	but_undo.addActionListener(new ActionListener() {
@@ -565,6 +577,17 @@ public class GUI {
 				e1.printStackTrace();
 			}
 		}
+		
+		/* Inicializar el text_pane para el xml */
+		JTextPane_xml=new JTextPane();
+		JTextPane_xml.setEditorKit(new XMLEditorKit());
+		/*
+		JTextPane_xml.read(new FileInputStream(pathToXMLFile));
+	    //or
+	    String xmlString=null;
+	    //some code to init the string
+	    editorPane.setText(xmlString);
+	    */
 		
 	}
 	
@@ -867,11 +890,24 @@ public class GUI {
 	}
 	
 	public void showXML (String filename){
-		Document doc = null;
 		
 		// Create a frame to "hold" our class
 		JFrame_XML = new JFrame("XML to JTree");
-
+		JFrame_XML.getContentPane().add(JTextPane_xml);
+		//JTextPane_xml.read(new FileInputStream(filename));
+		try
+		   {
+			JTextPane_xml.read(new FileInputStream("./files/function.xml"),null);			
+		   } catch (IOException e) {
+			e.printStackTrace();// Display a "nice" warning message if the file isn't there.
+		      JOptionPane.showMessageDialog(JFrame_XML, filename+" was not found",
+				         "Warning", JOptionPane.WARNING_MESSAGE);
+				      System.out.println();
+		}
+		JFrame_XML.validate();
+		//JTextPane_xml.setText(xmlString);
+		JFrame_XML.setVisible(true);
+/*
 		   Toolkit toolkit = Toolkit.getDefaultToolkit();
 		   Dimension dim = toolkit.getScreenSize();
 		   int screenHeight = dim.height;
@@ -923,6 +959,7 @@ public class GUI {
 		      BorderLayout.CENTER);
 		   JFrame_XML.validate();
 		   JFrame_XML.setVisible(true);
+		   */
 	}
 	
 	public void showSolution(){
