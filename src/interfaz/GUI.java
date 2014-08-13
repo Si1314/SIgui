@@ -702,11 +702,24 @@ public class GUI {
 		//String fileName = JOptionPane.showInputDialog("Enter file name");//String finalFileName = fileName.getText();
         FileWriter pw;
 		try {
-			File folder = new File("./files");
+			/*File folder = new File("./files");
 			if (!folder.exists()) {
 				folder.mkdir();
 			}
-			pw = new FileWriter ("./files/"+file_name+".cc");
+			*/
+			
+			if (path == null){
+				JFileChooser selecFich = new JFileChooser();
+			  	selecFich.setDialogTitle("Guardar fichero");
+			  	FileNameExtensionFilter filtro=new FileNameExtensionFilter("C++ file","cpp","cc");
+			  	selecFich.setFileFilter(filtro);
+			  	selecFich.showSaveDialog(frmGrupo);
+			  	path = new File(selecFich.getSelectedFile()+".cpp");
+				//Crear fichero donde guardar
+			}
+			System.out.println(path);
+			pw = new FileWriter(path);
+			//pw = new FileWriter ("./files/"+file_name+".cc");
 			pw.write(JTextPane_function.getText());
 			text_function = JTextPane_function.getText().split("\n");
 			int nlines = text_function.length;
