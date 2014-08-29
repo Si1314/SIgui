@@ -2,17 +2,12 @@ package interfaz;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +39,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
-import javax.swing.JTree;
+//import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.event.UndoableEditEvent;
@@ -59,23 +54,6 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.UndoManager;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-
-
-
-
-
-
-
-
-
-
-
 
 import renders.LineNumbers;
 import renders.MultiLineCellRenderer;
@@ -83,7 +61,6 @@ import renders.MultiLineCellRenderer;
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
 import net.miginfocom.swing.MigLayout;
-import xmlViewer.XML2JTree;
 import xmleditorkit.XMLEditorKit;
 
 
@@ -115,11 +92,11 @@ public class GUI {
 	int min_int = -5;
 	int loops_length = 10;
 	
-	private  JTree    JTree_XML;
+	//private  JTree    JTree_XML;
 	private static    JFrame   JFrame_XML;
 
-	private static final int FRAME_WIDTH = 440;
-	private static final int FRAME_HEIGHT = 280;
+	//private static final int FRAME_WIDTH = 440;
+	//private static final int FRAME_HEIGHT = 280;
 	
 	private Style traceStyle;
 	private Style textStyle;
@@ -151,7 +128,13 @@ public class GUI {
 		JMenuBar menubar = new JMenuBar();
 		JMenu file = new JMenu("File");
 		JMenuItem menu_new = new JMenuItem("New");
-			menu_new.setEnabled(false);
+			menu_new.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					JTextPane_function.setText("");
+					path = null;
+					file_name = "";
+				}
+			});
 		JMenuItem menu_open = new JMenuItem("Open File");
 			menu_open.setIcon(new ImageIcon("./img/Open-12.png"));
 			menu_open.addActionListener(new ActionListener() {
@@ -166,10 +149,6 @@ public class GUI {
 					saveTextEditor();
 				}
 			});
-		JMenuItem menu_close = new JMenuItem("Close");
-			menu_close.setEnabled(false);
-		JMenuItem menu_closeall = new JMenuItem("Close all");
-			menu_closeall.setEnabled(false);
 		JMenuItem menu_exit = new JMenuItem("Exit");
 			menu_exit.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -181,8 +160,6 @@ public class GUI {
 		file.addSeparator();
 		file.add(menu_save);
 		file.addSeparator();
-		file.add(menu_close);
-		file.add(menu_closeall);
 		file.addSeparator();
 		file.add(menu_exit);
 		menubar.add(file);
@@ -245,21 +222,38 @@ public class GUI {
 		edit.add(menu_selectall);
 		menubar.add(edit);
 		
-		JMenu debug = new JMenu("Debug");
+		JMenu run = new JMenu("Run");
+		JMenuItem menu_run = new JMenuItem("Run project");
+		menu_run.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				executeSE();
+			}
+		});
+		
 		JMenuItem menu_ChangeParams = new JMenuItem("Change Params to run");
 		menu_ChangeParams.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showInfoRun(true);
 			}
 		});
-		JMenuItem menu_WatchClang = new JMenuItem("Watch Clang directory");
+		
+		run.add(menu_ChangeParams);
+		run.add(menu_run);
+		menubar.add(run);
+		
+		JMenu debug = new JMenu("Debug");
+		
+		JMenuItem menu_WatchClang = new JMenuItem("Watch ast2xml directory");
 		menu_WatchClang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				JOptionPane.showMessageDialog (frmGrupo, path_clang.toString());
+				if (path_clang==null)
+					JOptionPane.showMessageDialog (frmGrupo, "Please, select ast2xml on \"change ast2xml directory\" option");
+				else{
+					JOptionPane.showMessageDialog (frmGrupo, path_clang.toString());
+				}
 			}
 		});
-		JMenuItem menu_BrowseClang = new JMenuItem("Change Clang directory");
+		JMenuItem menu_BrowseClang = new JMenuItem("Change ast2xml directory");
 		menu_BrowseClang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openFileClang();
@@ -282,7 +276,7 @@ public class GUI {
 			}
 		});
 		
-		debug.add(menu_ChangeParams);
+		
 		debug.addSeparator();
 		debug.add(menu_WatchClang);
 		debug.add(menu_BrowseClang);
@@ -325,8 +319,8 @@ public class GUI {
         JButton but_play = new JButton(icon_play);
 	        but_play.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					showInfoRun(false);
-					//executeSE();
+					//showInfoRun(false);
+					executeSE();
 				}
 			});
         JButton but_print = new JButton(icon_print);
@@ -558,7 +552,7 @@ public class GUI {
 			Object[] options = { "Browse" };
 			int rc = -1;
 			rc = JOptionPane.showOptionDialog(null, 
-					"Please, select where have you installed Clang",
+					"Please, select where have you installed ast2xml tool",
 					"",JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
 					null, options, options[0]);
 			if (rc == 0)
@@ -618,11 +612,11 @@ public class GUI {
 			  	}
 			    	
 		  	} catch (IllegalArgumentException e2){
-		  		 JOptionPane.showMessageDialog (frmGrupo, "La extensi�n del archivo es incorrecta."); 
+		  		 JOptionPane.showMessageDialog (frmGrupo, "Incorrect file."); 
 		  	}	  	
 		    
 		} catch (Exception e1) {
-	    	 JOptionPane.showMessageDialog (frmGrupo, "No has seleccionado ningun fichero"); 
+	    	 JOptionPane.showMessageDialog (frmGrupo, "Don't file selected"); 
 	    }
 		
 		if (!cerradoDialog){
@@ -650,7 +644,7 @@ public class GUI {
 			  	}
 			  	
 		} catch (Exception e1) {
-	    	 JOptionPane.showMessageDialog (frmGrupo, "No has seleccionado ningun fichero"); 
+	    	 JOptionPane.showMessageDialog (frmGrupo, "Don't file selected"); 
 	    }
 		if (!cerradoDialog){
 			FileWriter pw;
@@ -699,15 +693,8 @@ public class GUI {
 	}
 	
 	public void saveTextEditor(){
-		//String fileName = JOptionPane.showInputDialog("Enter file name");//String finalFileName = fileName.getText();
-        FileWriter pw;
+		FileWriter pw;
 		try {
-			/*File folder = new File("./files");
-			if (!folder.exists()) {
-				folder.mkdir();
-			}
-			*/
-			
 			if (path == null){
 				JFileChooser selecFich = new JFileChooser();
 			  	selecFich.setDialogTitle("Guardar fichero");
@@ -715,6 +702,7 @@ public class GUI {
 			  	selecFich.setFileFilter(filtro);
 			  	selecFich.showSaveDialog(frmGrupo);
 			  	path = new File(selecFich.getSelectedFile()+".cpp");
+			  	file_name = selecFich.getSelectedFile().getName();
 				//Crear fichero donde guardar
 			}
 			System.out.println(path);
@@ -844,8 +832,6 @@ public class GUI {
 			max_int = Integer.parseInt(maxInt.getText());
 			min_int = Integer.parseInt(minInt.getText());
 			loops_length = Integer.parseInt(loops.getText());
-			if (!menu)
-				executeProlog();
 		}
 		
 	}
@@ -877,8 +863,8 @@ public class GUI {
 			Iterator<String> it2 = data_aux.get(0).iterator();
 			while (it2.hasNext()){
 				int aux = Integer.parseInt(it2.next());
-				JTextArea_trace.append(aux + "(" + text_length[aux] + ")" + "  ");
-				doc.setParagraphAttributes(text_length[aux], 1, traceStyle, true);
+				JTextArea_trace.append(aux+" ");
+				doc.setParagraphAttributes(text_length[aux-1], 1, traceStyle, true);
 			}
 		}
 	}
@@ -903,7 +889,6 @@ public class GUI {
 	}
 	
 	public void showXML (String filename){
-		
 		// Create a frame to "hold" our class
 		JFrame_XML = new JFrame("XML to JTree");
 		JFrame_XML.getContentPane().add(JTextPane_xml);
@@ -911,7 +896,8 @@ public class GUI {
 		try
 		   {
 			JTextPane_xml.read(new FileInputStream("./files/function.xml"),null);			
-		   } catch (IOException e) {
+		   } 
+		catch (IOException e) {
 			e.printStackTrace();// Display a "nice" warning message if the file isn't there.
 		      JOptionPane.showMessageDialog(JFrame_XML, filename+" was not found",
 				         "Warning", JOptionPane.WARNING_MESSAGE);
@@ -1008,10 +994,13 @@ public class GUI {
 	}
 	
 	public int executeClang(){
-		try {
-			
+		try {			
 			String workingDirectory = System.getProperty("user.dir");
-			ProcessBuilder builder = new ProcessBuilder("./tools/runPFCTool.sh",path_clang.toString(),workingDirectory+"/files/"+file_name+".cc",workingDirectory+"/files/"+file_name+"XML.xml");//,function-name);
+		    String sFichero = workingDirectory+"/files/"+file_name+"AST.xml";
+		    File solFile = new File(sFichero);
+			if (solFile.exists())
+				solFile.delete();
+			ProcessBuilder builder = new ProcessBuilder("./tools/runPFCTool.sh",path_clang.toString(),path.toString()+".cc",workingDirectory+"/files/"+file_name+"AST.xml");//,function-name);
 			System.out.println(builder.command());
 			Process p = builder.start();
 			
@@ -1044,52 +1033,17 @@ public class GUI {
 	}
 	
 	public void executeSE(){
+		//JOptionPane.showMessageDialog (frmGrupo, "Please, save the text");
 		saveTextEditor();
-		int status = executeClang();
-		showInfoRun(false);
+		//int status = executeClang();
+		//showInfoRun(false);
+		//executeProlog();
+		editXML("./files/"+file_name+"AST.xml","<functions>","</functions>");
+		editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
 		showSolution();
 		menu_XMLclang.setEnabled(true);
 		menu_XMLprolog.setEnabled(true);
-		editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
-		editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
-		/*
-		try {
-			
-			String workingDirectory = System.getProperty("user.dir");
-			ProcessBuilder builder = new ProcessBuilder("./tools/runPFCTool.sh",path_clang.toString(),workingDirectory+"/files/"+file_name+".cc",workingDirectory+"/files/"+file_name+"XML.xml");//,function-name);
-			System.out.println(builder.command());
-			Process p = builder.start();
-			
-			int status = p.waitFor();
-			System.out.println(status);
-			System.out.println("working directory = "+System.getProperty("user.dir"));
-			if (status == 0){
-				ProcessBuilder pl = new ProcessBuilder("./tools/runInterpreter.sh","interpreter('"+workingDirectory+"/files/"+file_name+"XML.xml','"+workingDirectory+"/files/"+file_name+"PL.xml',"+min_int+","+max_int+","+loops_length+",'"+name_function+"')");
-				pl.redirectOutput(Redirect.INHERIT);
-				System.out.println(pl.command());
-				Process p2 = pl.start();
-				
-				//Read XML file
-				//BufferedReader reader = new BufferedReader(new InputStreamReader(p2.getInputStream()));
-				//String line = reader.readLine();
-				//System.out.println(line);
-				int status2 = p2.waitFor();
-				System.out.println(status2);
-				
-				showSolution();
-				menu_XMLclang.setEnabled(true);
-				menu_XMLprolog.setEnabled(true);
-				editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
-				editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
-			}
-			
-			//execute Clang with files(nameFile.cc)
-			//execute Prolog with (nameFileXML.xml)
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		*/
+		
 		
 	}
 	

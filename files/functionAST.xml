@@ -1,0 +1,30 @@
+<functions>
+<function name="dameMayor" type="int" line="3">
+    <params>
+        <param type="int" name="a"/>
+        <param type="int" name="b"/>
+    </params>
+    <body>
+        <if line="4">
+            <binaryOperator type="comparison" operator="&gt;">
+                <variable name="a"/>
+                <variable name="b"/>
+            </binaryOperator>
+            <then>
+                <body>
+                    <return line="5">
+                        <variable name="a"/>
+                    </return>
+                </body>
+            </then>
+            <else>
+                <body>
+                    <return line="7">
+                        <variable name="b"/>
+                    </return>
+                </body>
+            </else>
+        </if>
+    </body>
+</function>
+</functions>
