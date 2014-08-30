@@ -4,7 +4,7 @@
   <variable name="a" value="-4"/>
   <variable name="b" value="-5"/>
   <data>
-    <traza> 1 2 3</traza>
+    <traza> 21 23 25</traza>
     <cin/>
     <cout/>
   </data>
@@ -14,7 +14,7 @@
   <variable name="a" value="-5"/>
   <variable name="b" value="-5"/>
   <data>
-    <traza> 3 4 7</traza>
+    <traza> 43 44 47</traza>
     <cin/>
     <cout/>
   </data>
