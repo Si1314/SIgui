@@ -1,4 +1,3 @@
-<functions>
 <function name="dameMayor" type="int" line="3">
     <params>
         <param type="int" name="a"/>
@@ -27,4 +26,3 @@
         </if>
     </body>
 </function>
-</functions>

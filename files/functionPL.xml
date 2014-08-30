@@ -1,4 +1,4 @@
-<casos>
+
 ﻿<caso>
   <variable name="ret" value="-4"/>
   <variable name="a" value="-4"/>
@@ -19,4 +19,3 @@
     <cout/>
   </data>
 </caso>
-</casos>

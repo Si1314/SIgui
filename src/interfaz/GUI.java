@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -61,20 +62,20 @@ import renders.MultiLineCellRenderer;
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaClassyLookAndFeel;
 import net.miginfocom.swing.MigLayout;
-import xmleditorkit.XMLEditorKit;
+import xmlViewer.XmlTextPane;
 
 
 public class GUI {
 
 	private JFrame frmGrupo;
 	private JTextPane JTextPane_function;
-	private JTextPane JTextPane_xml;
+	private XmlTextPane JTextPane_xml;
 	//private JTextArea JTextArea_function;
 	private JTable JTable_result;
 	private JTextArea JTextArea_trace;
 	private JTextArea JTextArea_cin;
 	private JTextArea JTextArea_cout;
-	private String file_name = "function";
+	private String file_name = "";
 	private File path, path_clang;
 	private UndoManager undoManager = new UndoManager();
 
@@ -264,7 +265,7 @@ public class GUI {
 		menu_XMLclang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
-				showXML("./files/"+file_name+"XML.xml");
+				showXML("./files/"+file_name+"AST.xml");
 			}
 		});
 		menu_XMLprolog = new JMenuItem("See XML from Prolog");
@@ -497,21 +498,6 @@ public class GUI {
 		JTextArea_cout.setEditable(false);
 		JScrollPane_cout.setViewportView(JTextArea_cout);
 		
-		// Boton play
-		/*
-		JPanel JPanel_play = new JPanel();
-		frmGrupo.getContentPane().add(JPanel_play, "cell 1 2,grow");
-		JPanel_play.setLayout(new MigLayout("","[right]","[grow]"));
-		
-		JButton JButton_play = new JButton("Play",new ImageIcon("./img/Play1Pressed_24.png"));
-			JButton_play.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					executeSE();
-				}
-			});
-		JPanel_play.add(JButton_play, "align right");
-		*/
-		
 		// Zona resultado
 		
 		JPanel JPanel_result = new JPanel();
@@ -546,6 +532,19 @@ public class GUI {
 		//JTable_result.getColumnModel().getColumn(1).setCellRenderer(new MultiLineCellRenderer());
 		JScrollPane_result.setViewportView(JTable_result);
 		
+		//Vistas archivos XML
+		
+		JFrame_XML = new JFrame("Display XML");
+		JFrame_XML.setSize(400,300);
+		JFrame_XML.setBounds(250, 150, 550, 400);
+		JTextPane_xml = new XmlTextPane();
+		JTextPane_xml.setEditable(false);
+		JScrollPane JScrollPane_xml  = new JScrollPane(JTextPane_xml);
+		JScrollPane_xml.setViewportView(JTextPane_xml);
+	    JFrame_XML.add(JScrollPane_xml);
+	    JFrame_XML.setVisible(false);	
+		
+		
 		/* Comprobar herramienta y sino pedir ruta */
 		File config_file = new File("./config/config_file.txt");
 		if(!config_file.exists()){
@@ -572,16 +571,7 @@ public class GUI {
 			}
 		}
 		
-		/* Inicializar el text_pane para el xml */
-		JTextPane_xml=new JTextPane();
-		JTextPane_xml.setEditorKit(new XMLEditorKit());
-		/*
-		JTextPane_xml.read(new FileInputStream(pathToXMLFile));
-	    //or
-	    String xmlString=null;
-	    //some code to init the string
-	    editorPane.setText(xmlString);
-	    */
+		
 		
 	}
 	
@@ -833,7 +823,8 @@ public class GUI {
 			min_int = Integer.parseInt(minInt.getText());
 			loops_length = Integer.parseInt(loops.getText());
 		}
-		
+		if (!menu)
+			executeProlog();
 	}
 	
 	public void showInfo(int i){
@@ -868,34 +859,13 @@ public class GUI {
 			}
 		}
 	}
-	
-	public void editXML (String filename,String first, String end){ 
-	    end = "\n"+end;
-	    first = first+"\n";
-	    byte data1[] = first.getBytes();
-	    byte data2[] = end.getBytes();
-	    try {                           
-	    	RandomAccessFile file = new RandomAccessFile(filename, "rws");
-	        byte[] text = new byte[(int) file.length()];
-	        file.readFully(text);
-	        file.seek(0);
-	        file.write(data1);
-	        file.write(text);
-	        file.write(data2);
-	        file.close();
-	    } catch (IOException e) {       
-	            e.printStackTrace();
-	    }
-	}
+
 	
 	public void showXML (String filename){
-		// Create a frame to "hold" our class
-		JFrame_XML = new JFrame("XML to JTree");
-		JFrame_XML.getContentPane().add(JTextPane_xml);
-		//JTextPane_xml.read(new FileInputStream(filename));
 		try
 		   {
-			JTextPane_xml.read(new FileInputStream("./files/function.xml"),null);			
+			JTextPane_xml.read(new FileInputStream(filename),null);	
+			JFrame_XML.setVisible(true);
 		   } 
 		catch (IOException e) {
 			e.printStackTrace();// Display a "nice" warning message if the file isn't there.
@@ -903,62 +873,6 @@ public class GUI {
 				         "Warning", JOptionPane.WARNING_MESSAGE);
 				      System.out.println();
 		}
-		JFrame_XML.validate();
-		//JTextPane_xml.setText(xmlString);
-		JFrame_XML.setVisible(true);
-/*
-		   Toolkit toolkit = Toolkit.getDefaultToolkit();
-		   Dimension dim = toolkit.getScreenSize();
-		   int screenHeight = dim.height;
-		   int screenWidth = dim.width;
-
-		   // This should display a WIDTH x HEIGHT sized Frame in the middle of the screen
-		   JFrame_XML.setBounds( (screenWidth-FRAME_WIDTH)/2,
-		      (screenHeight-FRAME_HEIGHT)/2, FRAME_WIDTH, FRAME_HEIGHT );
-
-		   JFrame_XML.setBackground(Color.lightGray);
-		   JFrame_XML.getContentPane().setLayout(new BorderLayout());
-
-		   // Give our frame an icon when it's minimized.
-		   JFrame_XML.setIconImage(toolkit.getImage("Wrox.gif"));
-
-		   // Add a WindowListener so that we can close the window
-		   WindowListener wndCloser = new WindowAdapter()
-		   {
-		      public void windowClosing(WindowEvent e)
-		      {
-		         //exit();
-		      }
-		   };
-		   JFrame_XML.addWindowListener(wndCloser);
-		   try
-		   {
-		      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		      dbf.setValidating(false);  // Not important fro this demo
-
-		      DocumentBuilder db = dbf.newDocumentBuilder();
-		      doc = db.parse(filename);
-		   }
-		   catch( FileNotFoundException fnfEx )
-		   {
-		      // Display a "nice" warning message if the file isn't there.
-		      JOptionPane.showMessageDialog(JFrame_XML, filename+" was not found",
-		         "Warning", JOptionPane.WARNING_MESSAGE);
-		      System.out.println();
-		   }
-		   catch( Exception ex )
-		   {
-		      JOptionPane.showMessageDialog(JFrame_XML, ex.getMessage(), "Exception",
-		                                    JOptionPane.WARNING_MESSAGE);
-		      ex.printStackTrace();
-		   }
-
-		   Node root = (Node)doc.getDocumentElement();
-		   JFrame_XML.getContentPane().add(new XML2JTree( root, true, JTree_XML, JFrame_XML ),
-		      BorderLayout.CENTER);
-		   JFrame_XML.validate();
-		   JFrame_XML.setVisible(true);
-		   */
 	}
 	
 	public void showSolution(){
@@ -1035,11 +949,9 @@ public class GUI {
 	public void executeSE(){
 		//JOptionPane.showMessageDialog (frmGrupo, "Please, save the text");
 		saveTextEditor();
-		//int status = executeClang();
-		//showInfoRun(false);
+		int status = executeClang();
+		showInfoRun(false);
 		//executeProlog();
-		editXML("./files/"+file_name+"AST.xml","<functions>","</functions>");
-		editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
 		showSolution();
 		menu_XMLclang.setEnabled(true);
 		menu_XMLprolog.setEnabled(true);
