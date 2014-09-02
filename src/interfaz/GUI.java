@@ -956,8 +956,8 @@ public class GUI {
 	public void executeSE(){
 		//JOptionPane.showMessageDialog (frmGrupo, "Please, save the text");
 		saveTextEditor();
-		//int status = executeClang();
-		//showInfoRun(false);
+		int status = executeClang();
+		showInfoRun(false);
 		//executeProlog();
 		showSolution();
 		menu_XMLclang.setEnabled(true);
