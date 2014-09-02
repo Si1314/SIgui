@@ -389,7 +389,7 @@ public class GUI {
 		frmGrupo = new JFrame();
 		frmGrupo.pack();
 		frmGrupo.setLocationRelativeTo(null);
-		frmGrupo.setTitle("Ejecucion simbolica");
+		frmGrupo.setTitle("SymC++");
 		frmGrupo.setBounds(100, 100, 900, 500);
 		frmGrupo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmGrupo.getContentPane().setLayout(new MigLayout("", "[80.00,grow][680.00,grow][50.00,grow][250.00,grow][80.00,grow][]", "[20.00,grow][210.00,grow][10.00,grow][150.00,grow][1.00,grow][150.00,grow][1.00,grow][150.00,grow][1.00,grow][grow 600]"));
@@ -405,7 +405,7 @@ public class GUI {
 		frmGrupo.getContentPane().add(JPanel_function, "cell 1 1 1 7,grow");
 		JPanel_function.setLayout(new MigLayout("", "[grow]", "[16.00][grow]"));
 		
-		JLabel JLabel_function = new JLabel("C\u00F3digo de la funci\u00F3n:");
+		JLabel JLabel_function = new JLabel("Code:");
 		JLabel_function.setHorizontalAlignment(SwingConstants.CENTER);
 		JLabel_function.setFont(new Font("Tahoma", Font.BOLD, 12));
 		JPanel_function.add(JLabel_function, "cell 0 0");		    
@@ -449,7 +449,7 @@ public class GUI {
 		frmGrupo.getContentPane().add(JPanel_trace, "cell 3 3,grow");
 		JPanel_trace.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
-		JLabel JLabel_trace = new JLabel("Traza ejecucion:");
+		JLabel JLabel_trace = new JLabel("Execution tracking:");
 		JLabel_trace.setHorizontalAlignment(SwingConstants.CENTER);
 		JLabel_trace.setFont(new Font("Tahoma", Font.BOLD, 12));
 		JPanel_trace.add(JLabel_trace, "cell 0 0");
@@ -468,7 +468,7 @@ public class GUI {
 		frmGrupo.getContentPane().add(JPanel_cin, "cell 3 5,grow");
 		JPanel_cin.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
-		JLabel JLabel_cin = new JLabel("Consola entrada:");
+		JLabel JLabel_cin = new JLabel("Input console:");
 		JLabel_cin.setHorizontalAlignment(SwingConstants.CENTER);
 		JLabel_cin.setFont(new Font("Tahoma", Font.BOLD, 12));
 		JPanel_cin.add(JLabel_cin, "cell 0 0");
@@ -486,7 +486,7 @@ public class GUI {
 		frmGrupo.getContentPane().add(JPanel_cout, "cell 3 7,grow");
 		JPanel_cout.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
-		JLabel JLabel_cout = new JLabel("Consola salida:");
+		JLabel JLabel_cout = new JLabel("Output console:");
 		JLabel_cout.setHorizontalAlignment(SwingConstants.CENTER);
 		JLabel_cout.setFont(new Font("Tahoma", Font.BOLD, 12));
 		JPanel_cout.add(JLabel_cout, "cell 0 0");
@@ -504,7 +504,7 @@ public class GUI {
 		frmGrupo.getContentPane().add(JPanel_result, "cell 3 1,grow");
 		JPanel_result.setLayout(new MigLayout("", "[grow]", "[15.00][grow]"));
 		
-		JLabel JLabel_result = new JLabel("Tabla resultados:");
+		JLabel JLabel_result = new JLabel("Results table:");
 		JLabel_result.setHorizontalAlignment(SwingConstants.CENTER);
 		JLabel_result.setFont(new Font("Tahoma", Font.BOLD, 12));
 		JPanel_result.add(JLabel_result, "cell 0 0");
@@ -949,8 +949,8 @@ public class GUI {
 	public void executeSE(){
 		//JOptionPane.showMessageDialog (frmGrupo, "Please, save the text");
 		saveTextEditor();
-		int status = executeClang();
-		showInfoRun(false);
+		//int status = executeClang();
+		//showInfoRun(false);
 		//executeProlog();
 		showSolution();
 		menu_XMLclang.setEnabled(true);

@@ -1,0 +1,51 @@
+<function name="pruebaFor01" type="int" line="1">
+    <params>
+        <param type="int" name="a"/>
+    </params>
+    <body>
+        <if line="2">
+            <binaryOperator type="comparison" operator="&gt;">
+                <variable name="a"/>
+                <const value="0"/>
+            </binaryOperator>
+            <then>
+                <body>
+                    <declarations>
+                        <declaration type="int" name="r" line="3">
+                            <const value="0"/>
+                        </declaration>
+                    </declarations>
+                    <for line="135">
+                        <declarations>
+                            <declaration type="int" name="i" line="4">
+                                <const value="0"/>
+                            </declaration>
+                        </declarations>
+                        <binaryOperator type="comparison" operator="&lt;">
+                            <variable name="i"/>
+                            <const value="10"/>
+                        </binaryOperator>
+                        <unaryOperator name="i" operator="+" line="3"/>
+                        <body>
+                            <assignmentOperator name="r" type="arithmetic" operator="+" line="5">
+                                <variable name="a"/>
+                            </assignmentOperator>
+                        </body>
+                    </for>
+                    <return line="7">
+                        <variable name="r"/>
+                    </return>
+                </body>
+            </then>
+            <else>
+                <body>
+                    <return line="8">
+                        <signOperator type="-">
+                            <const value="1"/>
+                        </signOperator>
+                    </return>
+                </body>
+            </else>
+        </if>
+    </body>
+</function>
