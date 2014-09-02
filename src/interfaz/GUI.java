@@ -261,7 +261,7 @@ public class GUI {
 			}
 		});
 		menu_XMLclang = new JMenuItem("See XML from Clang");
-		//menu_XMLclang.setEnabled(false);
+		menu_XMLclang.setEnabled(false);
 		menu_XMLclang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//editXML("./files/"+file_name+"XML.xml","<functions>","</functions>");
@@ -269,7 +269,7 @@ public class GUI {
 			}
 		});
 		menu_XMLprolog = new JMenuItem("See XML from Prolog");
-		//menu_XMLprolog.setEnabled(false);
+		menu_XMLprolog.setEnabled(false);
 		menu_XMLprolog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//editXML("./files/"+file_name+"PL.xml","<casos>","</casos>");
@@ -611,6 +611,13 @@ public class GUI {
 		
 		if (!cerradoDialog){
 			printFile(JTextPane_function);
+			JTextArea_cin.setText("");
+	  		JTextArea_cout.setText("");
+	  		JTextArea_trace.setText("");
+	  		DefaultTableModel model = (DefaultTableModel) JTable_result.getModel();
+		    model.setRowCount(0);
+	  		menu_XMLclang.setEnabled(false);
+	  		menu_XMLprolog.setEnabled(false);
 		}
 	}
 	
@@ -949,8 +956,8 @@ public class GUI {
 	public void executeSE(){
 		//JOptionPane.showMessageDialog (frmGrupo, "Please, save the text");
 		saveTextEditor();
-		int status = executeClang();
-		showInfoRun(false);
+		//int status = executeClang();
+		//showInfoRun(false);
 		//executeProlog();
 		showSolution();
 		menu_XMLclang.setEnabled(true);
