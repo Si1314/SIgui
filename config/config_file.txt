@@ -1,1 +1,1 @@
-C:\Users\Raquel\Documents\facultad\SI\example.cpp
+/home/giraldillo/Documentos/prueba/ast2xml

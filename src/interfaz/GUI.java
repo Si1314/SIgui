@@ -921,7 +921,8 @@ public class GUI {
 		    File solFile = new File(sFichero);
 			if (solFile.exists())
 				solFile.delete();
-			ProcessBuilder builder = new ProcessBuilder("./tools/runPFCTool.sh",path_clang.toString(),path.toString()+".cc",workingDirectory+"/files/"+file_name+"AST.xml");//,function-name);
+			System.out.println("A ver si sale");
+			ProcessBuilder builder = new ProcessBuilder("./tools/runPFCTool.sh",path_clang.toString(),path.toString(),workingDirectory+"/files/"+file_name+"AST.xml");//,function-name);
 			System.out.println(builder.command());
 			Process p = builder.start();
 			
@@ -941,7 +942,7 @@ public class GUI {
 	public void executeProlog(){
 		try {
 			String workingDirectory = System.getProperty("user.dir");
-			ProcessBuilder pl = new ProcessBuilder("./tools/runInterpreter.sh","interpreter('"+workingDirectory+"/files/"+file_name+"XML.xml','"+workingDirectory+"/files/"+file_name+"PL.xml',"+min_int+","+max_int+","+loops_length+",'"+name_function+"')");
+			ProcessBuilder pl = new ProcessBuilder("./tools/runInterpreter.sh","interpreter('"+workingDirectory+"/files/"+file_name+"AST.xml','"+workingDirectory+"/files/"+file_name+"PL.xml',"+min_int+","+max_int+","+loops_length+",'"+name_function+"')");
 			pl.redirectOutput(Redirect.INHERIT);
 			System.out.println(pl.command());
 			Process p2 = pl.start();

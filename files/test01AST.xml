@@ -1,0 +1,328 @@
+<function name="foo" type="int" line="1">
+    <params>
+        <param type="int" name="x"/>
+        <param type="int" name="y"/>
+        <param type="int" name="z"/>
+    </params>
+    <body>
+        <declarations>
+            <declaration type="int" name="w" line="2"/>
+            <declaration type="int" name="q" line="2"/>
+            <declaration type="int" name="l" line="2"/>
+        </declarations>
+        <declarations>
+            <declaration type="int" name="j" line="3">
+                <const value="0"/>
+            </declaration>
+        </declarations>
+        <assignment name="w" line="4">
+            <binaryOperator type="arithmetic" operator="+">
+                <binaryOperator type="arithmetic" operator="+">
+                    <variable name="x"/>
+                    <variable name="y"/>
+                </binaryOperator>
+                <binaryOperator type="arithmetic" operator="*">
+                    <const value="1"/>
+                    <variable name="z"/>
+                </binaryOperator>
+            </binaryOperator>
+        </assignment>
+        <return line="5">
+            <binaryOperator type="arithmetic" operator="+">
+                <variable name="y"/>
+                <variable name="x"/>
+            </binaryOperator>
+        </return>
+    </body>
+</function>
+
+<function name="andfun" type="_Bool" line="8">
+    <params>
+        <param type="_Bool" name="x"/>
+        <param type="_Bool" name="y"/>
+    </params>
+    <body>
+        <return line="9">
+            <binaryOperator type="boolean" operator="&amp;&amp;">
+                <variable name="x"/>
+                <variable name="y"/>
+            </binaryOperator>
+        </return>
+    </body>
+</function>
+
+<function name="bucle" type="int" line="12">
+    <params>
+        <param type="int" name="x"/>
+        <param type="int" name="y"/>
+    </params>
+    <body>
+        <declarations>
+            <declaration type="int" name="w" line="13"/>
+            <declaration type="int" name="z" line="13"/>
+        </declarations>
+        <assignment name="w" line="14">
+            <variable name="y"/>
+        </assignment>
+        <assignment name="z" line="15">
+            <variable name="x"/>
+        </assignment>
+        <if line="16">
+            <binaryOperator type="comparison" operator="&gt;">
+                <variable name="z"/>
+                <const value="1"/>
+            </binaryOperator>
+            <then>
+                <body>
+                    <while line="17">
+                        <binaryOperator type="comparison" operator="&gt;">
+                            <variable name="w"/>
+                            <const value="0"/>
+                        </binaryOperator>
+                        <body>
+                            <assignment name="z" line="18">
+                                <binaryOperator type="arithmetic" operator="*">
+                                    <variable name="z"/>
+                                    <variable name="z"/>
+                                </binaryOperator>
+                            </assignment>
+                            <assignment name="w" line="19">
+                                <binaryOperator type="arithmetic" operator="-">
+                                    <variable name="w"/>
+                                    <const value="1"/>
+                                </binaryOperator>
+                            </assignment>
+                        </body>
+                    </while>
+                </body>
+            </then>
+            <else>
+                <body/>
+            </else>
+        </if>
+        <return line="22">
+            <variable name="z"/>
+        </return>
+    </body>
+</function>
+
+<function name="eso" type="int" line="25">
+    <params>
+        <param type="int" name="x"/>
+    </params>
+    <body>
+        <declarations>
+            <declaration type="int" name="y" line="26"/>
+        </declarations>
+        <for line="27">
+            <declarations>
+                <declaration type="int" name="i" line="27">
+                    <const value="0"/>
+                </declaration>
+            </declarations>
+            <binaryOperator type="comparison" operator="&lt;">
+                <variable name="i"/>
+                <const value="5"/>
+            </binaryOperator>
+            <assignment name="i" line="27">
+                <binaryOperator type="arithmetic" operator="+">
+                    <variable name="i"/>
+                    <const value="1"/>
+                </binaryOperator>
+            </assignment>
+            <body>
+                <assignment name="y" line="28">
+                    <binaryOperator type="arithmetic" operator="+">
+                        <binaryOperator type="arithmetic" operator="+">
+                            <variable name="y"/>
+                            <variable name="x"/>
+                        </binaryOperator>
+                        <variable name="i"/>
+                    </binaryOperator>
+                </assignment>
+            </body>
+        </for>
+        <return line="30">
+            <variable name="y"/>
+        </return>
+    </body>
+</function>
+
+<function name="deco" type="int" line="33">
+    <params>
+        <param type="int" name="x"/>
+        <param type="int" name="y"/>
+    </params>
+    <body>
+        <declarations>
+            <declaration type="int" name="r" line="34"/>
+        </declarations>
+        <if line="35">
+            <binaryOperator type="comparison" operator="&gt;">
+                <variable name="x"/>
+                <const value="0"/>
+            </binaryOperator>
+            <then>
+                <body>
+                    <if line="36">
+                        <binaryOperator type="comparison" operator="&gt;">
+                            <variable name="y"/>
+                            <const value="0"/>
+                        </binaryOperator>
+                        <then>
+                            <body>
+                                <assignment name="r" line="37">
+                                    <const value="3"/>
+                                </assignment>
+                            </body>
+                        </then>
+                        <else>
+                            <body>
+                                <assignment name="r" line="39">
+                                    <const value="2"/>
+                                </assignment>
+                            </body>
+                        </else>
+                    </if>
+                </body>
+            </then>
+            <else>
+                <body>
+                    <if line="42">
+                        <binaryOperator type="comparison" operator="&gt;">
+                            <variable name="y"/>
+                            <const value="0"/>
+                        </binaryOperator>
+                        <then>
+                            <body>
+                                <assignment name="r" line="43">
+                                    <const value="1"/>
+                                </assignment>
+                            </body>
+                        </then>
+                        <else>
+                            <body>
+                                <assignment name="r" line="45">
+                                    <const value="0"/>
+                                </assignment>
+                            </body>
+                        </else>
+                    </if>
+                </body>
+            </else>
+        </if>
+        <return line="48">
+            <variable name="r"/>
+        </return>
+    </body>
+</function>
+
+<function name="antes" type="int" line="51">
+    <params>
+        <param type="int" name="x"/>
+    </params>
+    <body>
+        <declarations>
+            <declaration type="int" name="w" line="52"/>
+        </declarations>
+        <assignment name="w" line="53">
+            <variable name="x"/>
+        </assignment>
+        <for line="54">
+            <declarations>
+                <declaration type="int" name="i" line="54">
+                    <const value="0"/>
+                </declaration>
+            </declarations>
+            <binaryOperator type="comparison" operator="&lt;">
+                <variable name="i"/>
+                <variable name="x"/>
+            </binaryOperator>
+            <assignment name="i" line="54">
+                <binaryOperator type="arithmetic" operator="+">
+                    <variable name="i"/>
+                    <const value="1"/>
+                </binaryOperator>
+            </assignment>
+            <body>
+                <assignment name="w" line="55">
+                    <binaryOperator type="arithmetic" operator="*">
+                        <const value="2"/>
+                        <variable name="w"/>
+                    </binaryOperator>
+                </assignment>
+            </body>
+        </for>
+        <return line="57">
+            <variable name="w"/>
+        </return>
+    </body>
+</function>
+
+<function name="exp" type="int" line="60">
+    <params>
+        <param type="int" name="x"/>
+        <param type="int" name="y"/>
+    </params>
+    <body>
+        <declarations>
+            <declaration type="int" name="w" line="61">
+                <variable name="y"/>
+            </declaration>
+        </declarations>
+        <assignmentOperator name="w" type="arithmetic" operator="+" line="62">
+            <variable name="x"/>
+        </assignmentOperator>
+        <return line="63">
+            <unaryOperator name="x" operator="+" line="63"/>
+        </return>
+    </body>
+</function>
+
+<function name="llama" type="int" line="66">
+    <params>
+        <param type="int" name="x"/>
+    </params>
+    <body>
+        <declarations>
+            <declaration type="int" name="r" line="67"/>
+        </declarations>
+        <assignment name="r" line="68">
+            <callFunction name="antes" type="int">
+                <arg>
+                    <variable name="x"/>
+                </arg>
+            </callFunction>
+        </assignment>
+        <declarations>
+            <declaration type="int" name="rr" line="69">
+                <callFunction name="antes" type="int">
+                    <arg>
+                        <variable name="r"/>
+                    </arg>
+                </callFunction>
+            </declaration>
+        </declarations>
+        <return line="70">
+            <variable name="rr"/>
+        </return>
+    </body>
+</function>
+
+<function name="llama2" type="int" line="73">
+    <params>
+        <param type="int" name="x"/>
+    </params>
+    <body>
+        <return line="74">
+            <callFunction name="llama" type="int">
+                <arg>
+                    <binaryOperator type="arithmetic" operator="+">
+                        <variable name="x"/>
+                        <variable name="x"/>
+                    </binaryOperator>
+                </arg>
+            </callFunction>
+        </return>
+    </body>
+</function>
