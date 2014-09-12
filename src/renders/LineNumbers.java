@@ -114,7 +114,7 @@ public class LineNumbers extends JList {
 
     public void setSizes(Font font) {
         FontMetrics fm = getFontMetrics(font);
-        setFixedCellHeight(new Integer(fm.getHeight()+1));
+        setFixedCellHeight(new Integer(fm.getHeight()));
         setFixedCellWidth(fm.stringWidth(" 0000 "));
     }
 }

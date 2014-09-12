@@ -22,6 +22,7 @@ import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
@@ -521,7 +522,7 @@ public class GUI {
 		JTable_result.setDefaultRenderer(String.class, new MultiLineCellRenderer());
 		JTable_result.addMouseListener(new MouseAdapter() {
 			  public void mouseClicked(MouseEvent e) {
-			    if (e.getClickCount() == 2) {
+			    if (e.getClickCount() == 1) {
 			      JTable target = (JTable)e.getSource();
 			      int row = target.getSelectedRow();
 			      showInfo(row);
@@ -667,17 +668,19 @@ public class GUI {
         	        	
         	FileReader lector = new FileReader(path);
             BufferedReader buffer = new BufferedReader(lector);
+            Scanner scan = new Scanner(path);
             String linea = "";
             StyledDocument docu = jtextpane.getStyledDocument();
             int count = 0;
-            int aux = 0;
             text_length = new int[lnr.getLineNumber()+1];
             while((linea = buffer.readLine()) != null){            	
+            	linea.replaceAll("\t", "    ");
+            	//linea = scan.nextLine();
             	docu.insertString(doc.getLength(), linea + "\n", null);
             	if (count == 0)
-            		text_length[count] = aux;
+            		text_length[count] = 0;
             	else
-            		text_length[count] = text_length[count-1]+aux;
+            		text_length[count] = text_length[count-1];
             	count++;
             }
             doc.setParagraphAttributes(0, JTextPane_function.getDocument().getLength(), textStyle, true);
@@ -921,7 +924,8 @@ public class GUI {
 		    File solFile = new File(sFichero);
 			if (solFile.exists())
 				solFile.delete();
-			ProcessBuilder builder = new ProcessBuilder("./tools/runPFCTool.sh",path_clang.toString(),/*TODO*/path.toString()+".cc",workingDirectory+"/files/"+file_name+"AST.xml");//,function-name);
+			System.out.println("A ver si sale");
+			ProcessBuilder builder = new ProcessBuilder("./tools/runAST2XML.sh",path_clang.toString(),path.toString(),workingDirectory+"/files/"+file_name+"AST.xml");//,function-name);
 			System.out.println(builder.command());
 			Process p = builder.start();
 			
@@ -956,8 +960,8 @@ public class GUI {
 	public void executeSE(){
 		//JOptionPane.showMessageDialog (frmGrupo, "Please, save the text");
 		saveTextEditor();
-		int status = executeClang();
-		showInfoRun(false);
+		//int status = executeClang();
+		//showInfoRun(false);
 		//executeProlog();
 		showSolution();
 		menu_XMLclang.setEnabled(true);
