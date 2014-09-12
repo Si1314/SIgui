@@ -922,7 +922,7 @@ public class GUI {
 			if (solFile.exists())
 				solFile.delete();
 			System.out.println("A ver si sale");
-			ProcessBuilder builder = new ProcessBuilder("./tools/runPFCTool.sh",path_clang.toString(),path.toString(),workingDirectory+"/files/"+file_name+"AST.xml");//,function-name);
+			ProcessBuilder builder = new ProcessBuilder("./tools/runAST2XML.sh",path_clang.toString(),path.toString(),workingDirectory+"/files/"+file_name+"AST.xml");//,function-name);
 			System.out.println(builder.command());
 			Process p = builder.start();
 			
