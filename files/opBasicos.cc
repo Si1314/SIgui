@@ -1,10 +1,10 @@
 #include "BuiltinsIO.h"
 
-bool dameValor(bool a){
+bool dameValor1(bool a){
 	return a;
 }
 
-int dameValor(int b){
+int dameValor2(int b){
 	return b;
 }
 

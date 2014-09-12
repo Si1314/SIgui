@@ -22,6 +22,7 @@ import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
@@ -521,7 +522,7 @@ public class GUI {
 		JTable_result.setDefaultRenderer(String.class, new MultiLineCellRenderer());
 		JTable_result.addMouseListener(new MouseAdapter() {
 			  public void mouseClicked(MouseEvent e) {
-			    if (e.getClickCount() == 2) {
+			    if (e.getClickCount() == 1) {
 			      JTable target = (JTable)e.getSource();
 			      int row = target.getSelectedRow();
 			      showInfo(row);
@@ -667,12 +668,15 @@ public class GUI {
         	        	
         	FileReader lector = new FileReader(path);
             BufferedReader buffer = new BufferedReader(lector);
+            Scanner scan = new Scanner(path);
             String linea = "";
             StyledDocument docu = jtextpane.getStyledDocument();
             int count = 0;
             int aux = 0;
             text_length = new int[lnr.getLineNumber()+1];
             while((linea = buffer.readLine()) != null){            	
+            	linea.replaceAll("\t", "    ");
+            	//linea = scan.nextLine();
             	docu.insertString(doc.getLength(), linea + "\n", null);
             	if (count == 0)
             		text_length[count] = aux;

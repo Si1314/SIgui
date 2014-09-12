@@ -1,4 +1,4 @@
-<function name="dameValor" type="_Bool" line="3">
+<function name="dameValor1" type="_Bool" line="3">
     <params>
         <param type="_Bool" name="a"/>
     </params>
@@ -9,7 +9,7 @@
     </body>
 </function>
 
-<function name="dameValor" type="int" line="7">
+<function name="dameValor2" type="int" line="7">
     <params>
         <param type="int" name="b"/>
     </params>
@@ -209,7 +209,7 @@
             <declaration type="int" name="b" line="60">
                 <binaryOperator type="arithmetic" operator="+">
                     <variable name="a"/>
-                    <const value="2"/>
+                    <const value="1"/>
                 </binaryOperator>
             </declaration>
         </declarations>
@@ -220,12 +220,6 @@
             </binaryOperator>
             <body>
                 <unaryOperator name="b" operator="+" line="62"/>
-                <consoleOut line="70">
-                    <binaryOperator type="arithmetic" operator="+">
-                        <variable name="a"/>
-                        <variable name="b"/>
-                    </binaryOperator>
-                </consoleOut>
             </body>
         </while>
         <return line="64">

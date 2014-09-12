@@ -1,38 +1,38 @@
 #include "BuiltinsIO.h"
 
 int potencia(int a, int b){
-if(b>=0){
-int c = b;
-int r = 1;
-while(c>0){
-r *= a;
-c--;
-}
-return r;
-}else{
-return -1;
-}
+    if(b>=0){
+        int c = b;
+        int r = 1;
+        while(c>0){
+            r *= a;
+            c--;
+        }
+        return r;
+    }else{
+        return -1;
+    }
 }
 
 int multDiez(int a){
-int b;
-if(a<0){
-b = -a;
-}else{
-b = a;
-}
-int c = 10;
-int r = 0;
-while(c > 0){
-r += a;
-c--;
-}
-return r;
+    int b;
+    if(a<0){
+        b = -a;
+    }else{
+        b = a;
+    }
+    int c = 10;
+    int r = 0;
+    while(c > 0){
+        r += a;
+        c--;
+    }
+    return r;
 }
 
 int dimeSiPos(int a){
 int r;
-if(a>=0){
+if(a>0){
 r = 1;
 }else{
 r = 0;
