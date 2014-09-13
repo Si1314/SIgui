@@ -1,5 +1,20 @@
 #include "BuiltinsIO.h"
 
+int introduceSuma(){
+int r = 4;
+int a = ConsoleIn_Int();
+int b = ConsoleIn_Int();
+int c = ConsoleIn_Int();
+return 0;
+}
+
+int decor3b(int b){
+int a = ConsoleIn_Int();
+ConsoleOut_Int(a);
+ConsoleOut_Int(b);
+return a+b;
+} 
+
 int potencia(int a, int b){
     if(b>=0){
         int c = b;
@@ -19,7 +34,7 @@ int multDiez(int a){
     if(a<0){
         b = -a;
     }else{
-        b = a;
+        b = a; 
     }
     int c = 10;
     int r = 0;
@@ -68,7 +83,8 @@ return fibo1 + fibo2;
 }
 
 int introduceEntero(){
-return ConsoleIn_Int();
+int a = ConsoleIn_Int();
+return a;
 }
 
 int reproduceEntero(int a){
