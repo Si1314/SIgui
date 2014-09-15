@@ -1,5 +1,14 @@
 #include "BuiltinsIO.h"
 
+int decodificador2bits(bool a, bool b){
+int r =  0;
+if(a) 
+r+=2;
+if(b) 
+r+=1;
+return r;
+} 
+
 int introduceSuma(){
 int r = 4;
 int a = ConsoleIn_Int();
@@ -8,15 +17,8 @@ int c = ConsoleIn_Int();
 return 0;
 }
 
-int decor3b(int b){
-int a = ConsoleIn_Int();
-ConsoleOut_Int(a);
-ConsoleOut_Int(b);
-return a+b;
-} 
-
 int potencia(int a, int b){
-    if(b>=0){
+    if(a>0&&b>=0){
         int c = b;
         int r = 1;
         while(c>0){
