@@ -1,12 +1,13 @@
 #include "BuiltinsIO.h"
 
-int decodificador2bits(bool a, bool b){
+int deco2(bool a, bool b){
 int r =  0;
 if(a) 
 r+=2;
 if(b) 
 r+=1;
-ConsoleOut_Int(3);
+ConsoleOut_String("culo");
+ConsoleOut_Int(34);
 return r;
 } 
 
