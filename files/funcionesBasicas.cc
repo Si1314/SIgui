@@ -6,6 +6,7 @@ if(a)
 r+=2;
 if(b) 
 r+=1;
+ConsoleOut_Int(3);
 return r;
 } 
 
