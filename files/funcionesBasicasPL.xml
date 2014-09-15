@@ -1,18 +1,9 @@
 <caso>
-  <variable name="ret" value="-50"/>
-  <variable name="a" value="-5"/>
+  <variable name="ret" value="-10"/>
+  <variable name="b" value="-5"/>
   <data>
-    <traza> 17 18 19 20 24 25 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 30</traza>
-    <cin/>
-    <cout/>
-  </data>
-</caso>
-<caso>
-  <variable name="ret" value="0"/>
-  <variable name="a" value="0"/>
-  <data>
-    <traza> 17 18 19 22 24 25 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 26 27 28 30</traza>
-    <cin/>
-    <cout/>
+    <traza> 11 12 13 14 15</traza>
+    <cin> -5</cin>
+    <cout> -5 -5</cout>
   </data>
 </caso>
