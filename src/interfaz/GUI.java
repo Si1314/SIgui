@@ -710,7 +710,7 @@ public class GUI {
 			int count = 0;
 			for (int i=0; i<text_function.length; i++){
 				text_length[i] = count;
-				count += text_function[i].length();
+				count += text_function[i].length()+1;
 			}
 			//JTextArea_function.write(pw); //Object of JTextArea
 	        pw.close();
@@ -955,8 +955,8 @@ public class GUI {
 	public void executeSE(){
 		//JOptionPane.showMessageDialog (frmGrupo, "Please, save the text");
 		saveTextEditor();
-		//int status = executeClang();
-		//showInfoRun(false);
+		int status = executeClang();
+		showInfoRun(false);
 		//executeProlog();
 		showSolution();
 		menu_XMLclang.setEnabled(true);
