@@ -671,17 +671,12 @@ public class GUI {
             Scanner scan = new Scanner(path);
             String linea = "";
             StyledDocument docu = jtextpane.getStyledDocument();
-            int count = 0;
+            //int count = 0;
             text_length = new int[lnr.getLineNumber()+1];
             while((linea = buffer.readLine()) != null){            	
             	linea.replaceAll("\t", "    ");
             	//linea = scan.nextLine();
             	docu.insertString(doc.getLength(), linea + "\n", null);
-            	if (count == 0)
-            		text_length[count] = 0;
-            	else
-            		text_length[count] = text_length[count-1];
-            	count++;
             }
             doc.setParagraphAttributes(0, JTextPane_function.getDocument().getLength(), textStyle, true);
             buffer.close();
@@ -960,8 +955,8 @@ public class GUI {
 	public void executeSE(){
 		//JOptionPane.showMessageDialog (frmGrupo, "Please, save the text");
 		saveTextEditor();
-		int status = executeClang();
-		showInfoRun(false);
+		//int status = executeClang();
+		//showInfoRun(false);
 		//executeProlog();
 		showSolution();
 		menu_XMLclang.setEnabled(true);
