@@ -1,22 +1,61 @@
 #include "BuiltinsIO.h"
 
 int deco2(bool a, bool b){
-int r =  0;
-if(a) 
-r+=2;
-if(b) 
-r+=1;
-ConsoleOut_String("culo");
-ConsoleOut_Int(34);
-return r;
+    int r =  0;
+    if(a) 
+        r+=2;
+    if(b) 
+        r+=1;
+    ConsoleOut_String("hola");
+    ConsoleOut_Int(34);
+    return r;
 } 
 
 int introduceSuma(){
-int r = 4;
-int a = ConsoleIn_Int();
-int b = ConsoleIn_Int();
-int c = ConsoleIn_Int();
-return 0;
+    int r = 4;
+    int a = ConsoleIn_Int();
+    int b = ConsoleIn_Int();
+    int c = ConsoleIn_Int();
+    return 0;
+}
+
+bool whileOrdenada(){
+    int a = -1;
+    int b = ConsoleIn_Int();
+    while(b>a && b!=-1){
+        ConsoleOut_Int(b);
+        a = b;
+        b = ConsoleIn_Int();
+    }
+    return b==-1;
+}
+
+bool capicuaConvexa5(){
+    int a1 = ConsoleIn_Int();
+    int b1 = ConsoleIn_Int();
+    int c = ConsoleIn_Int();
+    int b2 = ConsoleIn_Int();
+    int a2 = ConsoleIn_Int();
+    
+    return (a1==a2)&&(b1==b2)&&(a1<b1)&&(b1<c);
+}
+
+int modulo4(int a){
+    if (a>0) return a % 4;
+    else return -1;
+}
+
+bool esModulo5(int a){
+    return a%5 == 0;
+}
+
+int potencias(){
+    int a = ConsoleIn_Int();
+    int b = ConsoleIn_Int();
+    ConsoleOut_Int(potencia(a,b));
+    ConsoleOut_String("otracosa");
+    ConsoleOut_Int(potencia(b,a));
+    return true;
 }
 
 int potencia(int a, int b){
