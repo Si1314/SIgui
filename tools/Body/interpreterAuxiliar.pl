@@ -1,6 +1,6 @@
 :- include('executers.pl').
 :- include('expresions.pl').
-:- include('Functions/AuxiliaryFunctions.pl').
+:- include('../Functions/AuxiliaryFunctions.pl').
 
 interpreterAux(EntryFile,LabelTableNames, LabelTableValues,FunctionName,Trace,Cinput,Coutput):-
 	load_xml_file(EntryFile, Program),

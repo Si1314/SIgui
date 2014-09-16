@@ -1,25 +1,6 @@
 #include "BuiltinsIO.h"
 
-int deco2(bool a, bool b){
-    int r =  0;
-    if(a) 
-        r+=2;
-    if(b) 
-        r+=1;
-    ConsoleOut_String("hola");
-    ConsoleOut_Int(34);
-    return r;
-} 
-
-int introduceSuma(){
-    int r = 4;
-    int a = ConsoleIn_Int();
-    int b = ConsoleIn_Int();
-    int c = ConsoleIn_Int();
-    return 0;
-}
-
-bool whileOrdenada(){
+bool whileEstrictaCreciente(){
     int a = -1;
     int b = ConsoleIn_Int();
     while(b>a && b!=-1){
@@ -29,6 +10,89 @@ bool whileOrdenada(){
     }
     return b==-1;
 }
+
+int nfibonacci(int a){
+	if(a<0)
+		return -1;
+	if(a==0 || a==1)
+		return 1;
+	int fibo1 = 1;
+	int fibo2 = 1;
+	int auxf;
+	for(int i=2; i<a; i++){
+		auxf = fibo1 + fibo2;
+		fibo1 = fibo2;
+		fibo2 = auxf;
+	}
+	return fibo1 + fibo2;
+}
+
+int inverso(int a){
+	int aux = a;    
+	int aux2 = aux % 10;
+	int re = 0;
+	while(aux>0){
+        		re *= 10;
+		re += aux2;
+		ConsoleOut_Int(aux);
+		aux2= aux / 10;
+        		aux = aux2;
+		aux2 = aux % 10;
+    	}
+    	return re;
+}
+
+bool esCapicua(int a){
+	int aux = inverso(a);
+	ConsoleOut_Int(aux);
+	if (aux == a)
+		return true;
+	else
+		return false;
+	
+}
+
+
+// -------------------------------------------------------------------------------------
+
+int deco2(bool a, bool b){
+    int r =  0;
+    if(a) 
+        r+=2;
+    if(b) 
+        r+=1;
+    return r;
+} 
+
+int deco2b(bool a,bool b){
+    int r = 0;
+    if (a){
+        if(b){
+            r = 3;
+        }else{
+            r = 2;
+        }
+    }else{
+        if(b){
+            r = 1;
+        }else{
+            r = 0;
+        }
+    }
+    return r;
+}
+
+int introduceSuma(){
+    int a = ConsoleIn_Int();
+    int b = ConsoleIn_Int();
+    int c = ConsoleIn_Int();
+    return a+b+c;
+}
+
+
+
+
+
 
 bool capicuaConvexa5(){
     int a1 = ConsoleIn_Int();
@@ -41,35 +105,16 @@ bool capicuaConvexa5(){
 }
 
 int modulo4(int a){
-    if (a>0) return a % 4;
+int aux = a%4;
+if (aux==0) return aux;
+if (aux==1) return aux;
+if (aux==2) return aux;
+if (aux==3) return aux;
     else return -1;
 }
 
 bool esModulo5(int a){
     return a%5 == 0;
-}
-
-int potencias(){
-    int a = ConsoleIn_Int();
-    int b = ConsoleIn_Int();
-    ConsoleOut_Int(potencia(a,b));
-    ConsoleOut_String("otracosa");
-    ConsoleOut_Int(potencia(b,a));
-    return true;
-}
-
-int potencia(int a, int b){
-    if(a>0&&b>=0){
-        int c = b;
-        int r = 1;
-        while(c>0){
-            r *= a;
-            c--;
-        }
-        return r;
-    }else{
-        return -1;
-    }
 }
 
 int multDiez(int a){
@@ -99,6 +144,20 @@ return r;
 }
 
 
+int potencia(int a, int b){
+    if(a>0&&b>=0){
+        int c = b;
+        int r = 1;
+        while(c>0){
+            r += a;
+            c--;
+        }
+        return r;
+    }else{
+        return -1;
+    }
+}
+
 int factorial(int a){
 if(a>=0){
 int fact = 1;
@@ -109,20 +168,6 @@ return fact;
 }else{
 return -1;
 }
-}
-
-int fibonacci(int a){
-if(a<0) return -1;
-if(a==0 || a==1) return 1;
-int fibo1 = 1;
-int fibo2 = 1;
-int auxf;
-for(int i=2; i<a; i++){
-auxf = fibo1 + fibo2;
-fibo1 = fibo2;
-fibo2 = auxf;
-}
-return fibo1 + fibo2;
 }
 
 int introduceEntero(){
