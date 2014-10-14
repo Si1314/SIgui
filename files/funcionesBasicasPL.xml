@@ -1,48 +1,176 @@
 <caso>
   <variable name="ret" value="0"/>
   <data>
-    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 11</traza>
-    <cin> 10 11 12 13 14 15 10</cin>
-    <cout> 10 11 12 13 14 15</cout>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 11</traza>
+    <cin> 0 1 2 3 4 5 6 7 8 9 -5</cin>
+    <cout> 0 1 2 3 4 5 6 7 8 9</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 11</traza>
+    <cin> 0 1 2 3 4 5 6 7 8 9 -1</cin>
+    <cout> 0 1 2 3 4 5 6 7 8 9</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="0"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 3 4 5 6 7 8 -5</cin>
+    <cout> 0 1 2 3 4 5 6 7 8</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 3 4 5 6 7 8 -1</cin>
+    <cout> 0 1 2 3 4 5 6 7 8</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="0"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 3 4 5 6 7 -5</cin>
+    <cout> 0 1 2 3 4 5 6 7</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 3 4 5 6 7 -1</cin>
+    <cout> 0 1 2 3 4 5 6 7</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="0"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 3 4 5 6 -5</cin>
+    <cout> 0 1 2 3 4 5 6</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 3 4 5 6 -1</cin>
+    <cout> 0 1 2 3 4 5 6</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="0"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 3 4 5 -5</cin>
+    <cout> 0 1 2 3 4 5</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 3 4 5 -1</cin>
+    <cout> 0 1 2 3 4 5</cout>
   </data>
 </caso>
 <caso>
   <variable name="ret" value="0"/>
   <data>
     <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
-    <cin> 10 11 12 13 14 10</cin>
-    <cout> 10 11 12 13 14</cout>
+    <cin> 0 1 2 3 4 -5</cin>
+    <cout> 0 1 2 3 4</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 3 4 -1</cin>
+    <cout> 0 1 2 3 4</cout>
   </data>
 </caso>
 <caso>
   <variable name="ret" value="0"/>
   <data>
     <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
-    <cin> 10 11 12 13 10</cin>
-    <cout> 10 11 12 13</cout>
+    <cin> 0 1 2 3 -5</cin>
+    <cout> 0 1 2 3</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 3 -1</cin>
+    <cout> 0 1 2 3</cout>
   </data>
 </caso>
 <caso>
   <variable name="ret" value="0"/>
   <data>
     <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
-    <cin> 10 11 12 10</cin>
-    <cout> 10 11 12</cout>
+    <cin> 0 1 2 -5</cin>
+    <cout> 0 1 2</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 2 -1</cin>
+    <cout> 0 1 2</cout>
   </data>
 </caso>
 <caso>
   <variable name="ret" value="0"/>
   <data>
     <traza> 3 4 5 6 7 8 9 6 7 8 9 6 11</traza>
-    <cin> 10 11 10</cin>
-    <cout> 10 11</cout>
+    <cin> 0 1 -5</cin>
+    <cout> 0 1</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 7 8 9 6 11</traza>
+    <cin> 0 1 -1</cin>
+    <cout> 0 1</cout>
   </data>
 </caso>
 <caso>
   <variable name="ret" value="0"/>
   <data>
     <traza> 3 4 5 6 7 8 9 6 11</traza>
-    <cin> 10 10</cin>
-    <cout> 10</cout>
+    <cin> 0 -5</cin>
+    <cout> 0</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 7 8 9 6 11</traza>
+    <cin> 0 -1</cin>
+    <cout> 0</cout>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="0"/>
+  <data>
+    <traza> 3 4 5 6 11</traza>
+    <cin> -5</cin>
+    <cout/>
+  </data>
+</caso>
+<caso>
+  <variable name="ret" value="1"/>
+  <data>
+    <traza> 3 4 5 6 11</traza>
+    <cin> -1</cin>
+    <cout/>
   </data>
 </caso>
